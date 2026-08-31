@@ -1,0 +1,2954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PostForge — Social Post Generator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f3f4f6;
+    --panel: #ffffff;
+    --input: #f8f9fb;
+    --border: #e1e4e8;
+    --text: #111827;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --danger: #ef4444;
+    --green: #16a34a;
+}
+
+body.dark {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --input: #0d1117;
+    --border: #30363d;
+    --text: #f0f6fc;
+    --muted: #8b949e;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+    display: grid;
+    grid-template-columns: 410px 1fr;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+.editor {
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+}
+
+.editor-top {
+    padding: 22px 22px 15px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--border);
+    padding: 0 15px;
+}
+
+.tab {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 13px 5px;
+    font-size: 12px;
+    font-weight: 800;
+    position: relative;
+}
+
+.tab.active {
+    color: var(--accent);
+}
+
+.tab.active::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+/* =========================================================
+   TAB CONTENT
+========================================================= */
+
+.tab-content {
+    display: none;
+    padding: 22px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.section {
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 900;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.field {
+    margin-bottom: 13px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 750;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--input);
+    color: var(--text);
+    padding: 10px 11px;
+    border-radius: 9px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--accent);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.file-button {
+    display: block;
+    text-align: center;
+    padding: 13px;
+    border: 1px dashed var(--border);
+    background: var(--input);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.file-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.file-button input {
+    display: none;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox label {
+    margin: 0;
+}
+
+.checkbox input {
+    width: 16px;
+    height: 16px;
+}
+
+.button-row {
+    display: flex;
+    gap: 8px;
+}
+
+.primary,
+.secondary,
+.danger {
+    border-radius: 9px;
+    padding: 10px 13px;
+    border: 0;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+.primary {
+    background: var(--accent);
+    color: white;
+}
+
+.secondary {
+    background: var(--input);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.danger {
+    background: var(--danger);
+    color: white;
+}
+
+.full {
+    width: 100%;
+}
+
+.help {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   CROP BOX
+========================================================= */
+
+.crop-box {
+    border: 1px solid var(--border);
+    background: #111;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 13px;
+    position: relative;
+}
+
+.crop-box img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+}
+
+.crop-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px solid rgba(255,255,255,.4);
+}
+
+/* =========================================================
+   COMMENTS EDITOR
+========================================================= */
+
+.comment-editor {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px;
+    margin-bottom: 12px;
+}
+
+.comment-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.comment-title {
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.remove-comment {
+    border: 0;
+    background: transparent;
+    color: var(--danger);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.small-label {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview-area {
+    min-width: 0;
+    height: 100vh;
+    overflow: auto;
+    padding: 30px;
+}
+
+.preview-toolbar {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-title {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.preview-tools {
+    display: flex;
+    gap: 7px;
+}
+
+.preview-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-bottom: 100px;
+}
+
+.post {
+    width: 500px;
+    max-width: 100%;
+    background: white;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    transform-origin: top center;
+}
+
+/* =========================================================
+   POST HEADER
+========================================================= */
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 16px;
+}
+
+.avatar-wrap {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform-origin: center;
+}
+
+.profile-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.display-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.username {
+    color: #777;
+    font-size: 12px;
+    margin-top: 1px;
+}
+
+.verified {
+    width: 15px;
+    height: 15px;
+    background: #1d9bf0;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.more {
+    font-weight: 900;
+    font-size: 20px;
+}
+
+/* =========================================================
+   CAPTION
+========================================================= */
+
+.caption {
+    padding: 0 16px 14px;
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   MEDIA
+========================================================= */
+
+.post-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #ddd;
+    position: relative;
+    cursor: grab;
+}
+
+.post-media:active {
+    cursor: grabbing;
+}
+
+.post-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    transform-origin: center center;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+    display: flex;
+    gap: 20px;
+    padding: 12px 16px 5px;
+    font-size: 21px;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-count {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.stats {
+    padding: 2px 16px 12px;
+    color: #666;
+    font-size: 11px;
+}
+
+.caption-preview {
+    padding: 0 16px 14px;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.caption-preview strong {
+    margin-right: 5px;
+}
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+.comments {
+    border-top: 1px solid #eee;
+    padding: 11px 16px 15px;
+}
+
+.comments-title {
+    color: #777;
+    font-size: 11px;
+    font-weight: 850;
+    margin-bottom: 12px;
+}
+
+.comment {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 13px;
+}
+
+.comment-avatar {
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comment-body {
+    min-width: 0;
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.comment-name-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comment-name {
+    font-weight: 850;
+}
+
+.comment-username {
+    color: #888;
+    font-size: 10px;
+}
+
+.comment-text {
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+}
+
+.comment-meta {
+    color: #888;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.pinned {
+    background: #f5f6f8;
+    border-radius: 9px;
+    padding: 8px;
+}
+
+.pin-label {
+    color: #777;
+    font-size: 9px;
+    font-weight: 900;
+    margin-bottom: 4px;
+}
+
+/* =========================================================
+   X TEMPLATE
+========================================================= */
+
+.template-x {
+    border-radius: 15px;
+}
+
+.template-x .post-media {
+    aspect-ratio: 16 / 9;
+}
+
+.template-x .actions {
+    gap: 25px;
+}
+
+/* =========================================================
+   TIKTOK TEMPLATE
+========================================================= */
+
+.template-tiktok {
+    width: 390px;
+    background: #111;
+    color: white;
+    border: 0;
+    border-radius: 0;
+}
+
+.template-tiktok .post-header {
+    position: relative;
+    z-index: 2;
+    padding-top: 18px;
+}
+
+.template-tiktok .username {
+    color: #bbb;
+}
+
+.template-tiktok .caption {
+    position: relative;
+    z-index: 2;
+}
+
+.template-tiktok .post-media {
+    aspect-ratio: 9 / 16;
+}
+
+.template-tiktok .stats {
+    color: #bbb;
+}
+
+.template-tiktok .comments {
+    border-color: #333;
+}
+
+.template-tiktok .comments-title,
+.template-tiktok .comment-meta {
+    color: #aaa;
+}
+
+.template-tiktok .pinned {
+    background: #222;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    .editor {
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .preview-area {
+        height: auto;
+        min-height: 100vh;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =====================================================
+     EDITOR
+===================================================== -->
+
+<aside class="editor">
+
+    <div class="editor-top">
+
+        <div class="logo">
+            Post<span>Forge</span>
+        </div>
+
+        <div class="subtitle">
+            Social media post generator
+        </div>
+
+    </div>
+
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            data-tab="postTab">
+            Post
+        </button>
+
+        <button
+            class="tab"
+            data-tab="profileTab">
+            Profile
+        </button>
+
+        <button
+            class="tab"
+            data-tab="commentsTab">
+            Comments
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         POST TAB
+    ================================================== -->
+
+    <div
+        id="postTab"
+        class="tab-content active">
+
+        <div class="section">
+
+            <div class="section-title">
+                Template
+            </div>
+
+            <div class="field">
+
+                <label>
+                    Platform
+                </label>
+
+                <select id="template">
+
+                    <option value="instagram">
+                        Instagram
+                    </option>
+
+                    <option value="x">
+                        X / Twitter
+                    </option>
+
+                    <option value="tiktok">
+                        TikTok
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Caption
+            </div>
+
+            <div class="field">
+
+                <textarea
+                    id="caption">Finally got to share this with you guys. ❤️</textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Media
+            </div>
+
+            <div class="field">
+
+                <label class="file-button">
+
+                    Upload Post Image
+
+                    <input
+                        type="file"
+                        id="postUpload"
+                        accept="image/*">
+
+                </label>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Zoom
+                </label>
+
+                <input
+                    id="imageZoom"
+                    type="range"
+                    min="1"
+                    max="4"
+                    step=".01"
+                    value="1">
+
+            </div>
+
+
+            <div class="help">
+                You can also drag the image directly inside
+                the preview.
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Engagement
+            </div>
+
+            <div class="row">
+
+                <div class="field">
+
+                    <label>
+                        Likes
+                    </label>
+
+                    <input
+                        id="likes"
+                        type="number"
+                        value="12400">
+
+                </div>
+
+                <div class="field">
+
+                    <label>
+                        Comments
+                    </label>
+
+                    <input
+                        id="commentCount"
+                        type="number"
+                        value="482">
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="field">
+
+                    <label>
+                        Shares
+                    </label>
+
+                    <input
+                        id="shares"
+                        type="number"
+                        value="231">
+
+                </div>
+
+                <div class="field">
+
+                    <label>
+                        Views
+                    </label>
+
+                    <input
+                        id="views"
+                        type="number"
+                        value="184000">
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Saves
+                </label>
+
+                <input
+                    id="saves"
+                    type="number"
+                    value="1284">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Post Timestamp
+                </label>
+
+                <input
+                    id="timestamp"
+                    type="text"
+                    value="2h">
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Tools
+            </div>
+
+            <div class="button-row">
+
+                <button
+                    class="primary"
+                    id="exportBtn">
+                    Export PNG
+                </button>
+
+                <button
+                    class="secondary"
+                    id="themeBtn">
+                    Dark Editor
+                </button>
+
+            </div>
+
+            <br>
+
+            <button
+                class="danger full"
+                id="resetBtn">
+                Reset Generator
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PROFILE TAB
+    ================================================== -->
+
+    <div
+        id="profileTab"
+        class="tab-content">
+
+        <div class="section">
+
+            <div class="section-title">
+                Profile
+            </div>
+
+
+            <div class="field">
+
+                <label class="file-button">
+
+                    Upload Profile Picture
+
+                    <input
+                        type="file"
+                        id="avatarUpload"
+                        accept="image/*">
+
+                </label>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Display Name
+                </label>
+
+                <input
+                    id="displayName"
+                    type="text"
+                    value="Olivia Carter">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Username
+                </label>
+
+                <input
+                    id="username"
+                    type="text"
+                    value="@oliviacarter">
+
+            </div>
+
+
+            <div class="field checkbox">
+
+                <input
+                    id="verified"
+                    type="checkbox"
+                    checked>
+
+                <label for="verified">
+                    Verified account
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Profile Picture Crop
+            </div>
+
+            <div class="field">
+
+                <label>
+                    Zoom
+                </label>
+
+                <input
+                    id="avatarZoom"
+                    type="range"
+                    min="1"
+                    max="4"
+                    step=".01"
+                    value="1">
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="field">
+
+                    <label>
+                        X Position
+                    </label>
+
+                    <input
+                        id="avatarX"
+                        type="range"
+                        min="-100"
+                        max="100"
+                        value="0">
+
+                </div>
+
+                <div class="field">
+
+                    <label>
+                        Y Position
+                    </label>
+
+                    <input
+                        id="avatarY"
+                        type="range"
+                        min="-100"
+                        max="100"
+                        value="0">
+
+                </div>
+
+            </div>
+
+
+            <div class="help">
+                Drag the profile picture directly on the
+                avatar in the preview.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         COMMENTS TAB
+    ================================================== -->
+
+    <div
+        id="commentsTab"
+        class="tab-content">
+
+        <div class="section">
+
+            <div class="section-title">
+                Comment Builder
+            </div>
+
+            <div id="commentEditors"></div>
+
+            <button
+                class="secondary full"
+                id="addComment">
+                + Add Comment
+            </button>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     PREVIEW
+===================================================== -->
+
+<main class="preview-area">
+
+    <div class="preview-toolbar">
+
+        <div class="preview-title">
+            Live Preview
+        </div>
+
+        <div class="preview-tools">
+
+            <button
+                class="secondary"
+                id="zoomOut">
+                −
+            </button>
+
+            <button
+                class="secondary"
+                id="zoomIn">
+                +
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="preview-wrapper">
+
+        <div
+            id="post"
+            class="post">
+
+
+            <!-- HEADER -->
+
+            <div class="post-header">
+
+                <div
+                    class="avatar-wrap"
+                    id="avatarDrag">
+
+                    <img
+                        id="previewAvatar"
+                        class="avatar"
+                        src=""
+                        draggable="false">
+
+                </div>
+
+
+                <div class="profile-info">
+
+                    <div class="display-name">
+
+                        <span id="previewName">
+                            Olivia Carter
+                        </span>
+
+                        <span
+                            id="previewVerified"
+                            class="verified">
+                            ✓
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="previewUsername"
+                        class="username">
+                        @oliviacarter
+                    </div>
+
+                </div>
+
+
+                <div class="more">
+                    ⋯
+                </div>
+
+            </div>
+
+
+            <!-- CAPTION -->
+
+            <div
+                id="previewCaption"
+                class="caption">
+                Finally got to share this with you guys. ❤️
+            </div>
+
+
+            <!-- IMAGE -->
+
+            <div
+                class="post-media"
+                id="mediaDrag">
+
+                <img
+                    id="previewImage"
+                    src=""
+                    draggable="false">
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <div class="action">
+                    ♡
+                    <span
+                        id="previewLikes"
+                        class="action-count">
+                        12.4K
+                    </span>
+                </div>
+
+                <div class="action">
+                    💬
+                    <span
+                        id="previewComments"
+                        class="action-count">
+                        482
+                    </span>
+                </div>
+
+                <div class="action">
+                    ↗
+                    <span
+                        id="previewShares"
+                        class="action-count">
+                        231
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <span id="previewViews">
+                    184K
+                </span>
+
+                views ·
+
+                <span id="previewTime">
+                    2h
+                </span>
+
+            </div>
+
+
+            <!-- CAPTION PREVIEW -->
+
+            <div class="caption-preview">
+
+                <strong id="captionName">
+                    Olivia Carter
+                </strong>
+
+                <span id="captionText">
+                    Finally got to share this with you guys. ❤️
+                </span>
+
+            </div>
+
+
+            <!-- COMMENTS -->
+
+            <div class="comments">
+
+                <div class="comments-title">
+                    Comments
+                </div>
+
+                <div id="previewCommentsList"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let avatarURL = "";
+let postImageURL = "";
+
+let comments = [];
+
+let previewScale = 1;
+
+let imagePosition = {
+    x: 0,
+    y: 0
+};
+
+let avatarPosition = {
+    x: 0,
+    y: 0
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+function formatNumber(value) {
+
+    const number = Number(value) || 0;
+
+    if (number >= 1000000000) {
+        return (number / 1000000000)
+            .toFixed(1)
+            .replace(".0", "") + "B";
+    }
+
+    if (number >= 1000000) {
+        return (number / 1000000)
+            .toFixed(1)
+            .replace(".0", "") + "M";
+    }
+
+    if (number >= 1000) {
+        return (number / 1000)
+            .toFixed(1)
+            .replace(".0", "") + "K";
+    }
+
+    return number.toLocaleString();
+}
+
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================================
+   DEFAULT AVATAR
+========================================================= */
+
+function generateDefaultAvatar(letter = "O") {
+
+    const svg = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="300"
+            height="300">
+
+            <rect
+                width="300"
+                height="300"
+                fill="#d6d6d6"/>
+
+            <text
+                x="50%"
+                y="57%"
+                dominant-baseline="middle"
+                text-anchor="middle"
+                font-family="Arial"
+                font-size="140"
+                font-weight="bold"
+                fill="#666">
+                ${letter}
+            </text>
+
+        </svg>
+    `;
+
+    return "data:image/svg+xml;charset=utf-8," +
+        encodeURIComponent(svg);
+}
+
+
+/* =========================================================
+   DEFAULT IMAGE
+========================================================= */
+
+function generateDefaultImage() {
+
+    const svg = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1000"
+            height="1000">
+
+            <defs>
+
+                <linearGradient
+                    id="g"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1">
+
+                    <stop
+                        offset="0%"
+                        stop-color="#cfcfcf"/>
+
+                    <stop
+                        offset="100%"
+                        stop-color="#888"/>
+
+                </linearGradient>
+
+            </defs>
+
+            <rect
+                width="1000"
+                height="1000"
+                fill="url(#g)"/>
+
+            <text
+                x="500"
+                y="500"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                font-family="Arial"
+                font-size="65"
+                font-weight="bold"
+                fill="white"
+                opacity=".8">
+                YOUR IMAGE
+            </text>
+
+        </svg>
+    `;
+
+    return "data:image/svg+xml;charset=utf-8," +
+        encodeURIComponent(svg);
+}
+
+
+avatarURL =
+    generateDefaultAvatar("O");
+
+postImageURL =
+    generateDefaultImage();
+
+$("previewAvatar").src =
+    avatarURL;
+
+$("previewImage").src =
+    postImageURL;
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+document
+    .querySelectorAll(".tab")
+    .forEach(tab => {
+
+        tab.addEventListener("click", function() {
+
+            document
+                .querySelectorAll(".tab")
+                .forEach(t =>
+                    t.classList.remove("active")
+                );
+
+            document
+                .querySelectorAll(".tab-content")
+                .forEach(content =>
+                    content.classList.remove("active")
+                );
+
+            this.classList.add("active");
+
+            $(this.dataset.tab)
+                .classList.add("active");
+
+        });
+
+    });
+
+
+/* =========================================================
+   UPLOAD AVATAR
+========================================================= */
+
+$("avatarUpload")
+    .addEventListener("change", function(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) return;
+
+        avatarURL =
+            URL.createObjectURL(file);
+
+        $("previewAvatar").src =
+            avatarURL;
+
+    });
+
+
+/* =========================================================
+   UPLOAD POST IMAGE
+========================================================= */
+
+$("postUpload")
+    .addEventListener("change", function(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) return;
+
+        postImageURL =
+            URL.createObjectURL(file);
+
+        $("previewImage").src =
+            postImageURL;
+
+    });
+
+
+/* =========================================================
+   LIVE INPUTS
+========================================================= */
+
+const liveInputs = [
+
+    "displayName",
+    "username",
+    "caption",
+
+    "likes",
+    "commentCount",
+    "shares",
+    "views",
+    "saves",
+
+    "timestamp",
+
+    "verified",
+
+    "template",
+
+    "imageZoom",
+
+    "avatarZoom",
+    "avatarX",
+    "avatarY"
+
+];
+
+
+liveInputs.forEach(id => {
+
+    $(id).addEventListener(
+        "input",
+        updatePreview
+    );
+
+    $(id).addEventListener(
+        "change",
+        updatePreview
+    );
+
+});
+
+
+/* =========================================================
+   UPDATE PREVIEW
+========================================================= */
+
+function updatePreview() {
+
+    const name =
+        $("displayName").value ||
+        "Username";
+
+    const username =
+        $("username").value ||
+        "@username";
+
+    const caption =
+        $("caption").value ||
+        "";
+
+
+    $("previewName").textContent =
+        name;
+
+    $("previewUsername").textContent =
+        username.startsWith("@")
+            ? username
+            : "@" + username;
+
+
+    $("previewCaption").textContent =
+        caption;
+
+    $("captionName").textContent =
+        name;
+
+    $("captionText").textContent =
+        caption;
+
+
+    $("previewLikes").textContent =
+        formatNumber(
+            $("likes").value
+        );
+
+    $("previewComments").textContent =
+        formatNumber(
+            $("commentCount").value
+        );
+
+    $("previewShares").textContent =
+        formatNumber(
+            $("shares").value
+        );
+
+    $("previewViews").textContent =
+        formatNumber(
+            $("views").value
+        );
+
+    $("previewTime").textContent =
+        $("timestamp").value ||
+        "now";
+
+
+    /* VERIFIED */
+
+    $("previewVerified").style.display =
+        $("verified").checked
+            ? "inline-flex"
+            : "none";
+
+
+    /* IMAGE */
+
+    const image =
+        $("previewImage");
+
+    const imageZoom =
+        Number(
+            $("imageZoom").value
+        );
+
+    image.style.transform =
+        `translate(${imagePosition.x}px, ${imagePosition.y}px)
+         scale(${imageZoom})`;
+
+
+    /* AVATAR */
+
+    const avatar =
+        $("previewAvatar");
+
+    const avatarZoom =
+        Number(
+            $("avatarZoom").value
+        );
+
+    avatar.style.transform =
+        `translate(${avatarPosition.x}px, ${avatarPosition.y}px)
+         scale(${avatarZoom})`;
+
+
+    /* TEMPLATE */
+
+    const post =
+        $("post");
+
+    post.classList.remove(
+        "template-x",
+        "template-tiktok"
+    );
+
+
+    const template =
+        $("template").value;
+
+
+    if (template === "x") {
+        post.classList.add("template-x");
+    }
+
+    if (template === "tiktok") {
+        post.classList.add("template-tiktok");
+    }
+
+
+    renderComments();
+
+}
+
+
+/* =========================================================
+   DRAG IMAGE
+========================================================= */
+
+function enableDragging(
+    element,
+    target,
+    position,
+    multiplier = 1
+) {
+
+    let dragging = false;
+
+    let startX = 0;
+    let startY = 0;
+
+    let originalX = 0;
+    let originalY = 0;
+
+
+    element.addEventListener(
+        "pointerdown",
+        function(event) {
+
+            dragging = true;
+
+            element.setPointerCapture(
+                event.pointerId
+            );
+
+            startX =
+                event.clientX;
+
+            startY =
+                event.clientY;
+
+            originalX =
+                position.x;
+
+            originalY =
+                position.y;
+
+        }
+    );
+
+
+    element.addEventListener(
+        "pointermove",
+        function(event) {
+
+            if (!dragging) return;
+
+            const dx =
+                (event.clientX - startX) *
+                multiplier;
+
+            const dy =
+                (event.clientY - startY) *
+                multiplier;
+
+
+            position.x =
+                originalX + dx;
+
+            position.y =
+                originalY + dy;
+
+
+            updatePreview();
+
+        }
+    );
+
+
+    element.addEventListener(
+        "pointerup",
+        function() {
+
+            dragging = false;
+
+        }
+    );
+
+
+    element.addEventListener(
+        "pointercancel",
+        function() {
+
+            dragging = false;
+
+        }
+    );
+
+}
+
+
+enableDragging(
+    $("mediaDrag"),
+    $("previewImage"),
+    imagePosition,
+    1
+);
+
+
+enableDragging(
+    $("avatarDrag"),
+    $("previewAvatar"),
+    avatarPosition,
+    1
+);
+
+
+/* =========================================================
+   AVATAR SLIDERS
+========================================================= */
+
+$("avatarX")
+    .addEventListener("input", function() {
+
+        avatarPosition.x =
+            Number(this.value);
+
+        updatePreview();
+
+    });
+
+
+$("avatarY")
+    .addEventListener("input", function() {
+
+        avatarPosition.y =
+            Number(this.value);
+
+        updatePreview();
+
+    });
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function addComment() {
+
+    comments.push({
+
+        name: "Alex Carter",
+
+        username: "@alexcarter",
+
+        text:
+            "This is actually insane 😭",
+
+        likes: 124,
+
+        time:
+            "1h",
+
+        verified:
+            false,
+
+        pinned:
+            false,
+
+        avatar:
+            generateDefaultAvatar("A")
+
+    });
+
+
+    renderCommentEditors();
+
+    updatePreview();
+
+}
+
+
+$("addComment")
+    .addEventListener(
+        "click",
+        addComment
+    );
+
+
+/* =========================================================
+   COMMENT EDITORS
+========================================================= */
+
+function renderCommentEditors() {
+
+    const container =
+        $("commentEditors");
+
+    container.innerHTML = "";
+
+
+    comments.forEach(
+        (comment, index) => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "comment-editor";
+
+
+            div.innerHTML = `
+
+                <div class="comment-editor-header">
+
+                    <span class="comment-title">
+                        Comment ${index + 1}
+                    </span>
+
+                    <button
+                        class="remove-comment"
+                        data-index="${index}">
+                        Remove
+                    </button>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Profile Picture
+                    </label>
+
+                    <label class="file-button">
+
+                        Upload Comment Avatar
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            class="comment-avatar-upload"
+                            data-index="${index}">
+
+                    </label>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Display Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="comment-name-input"
+                        data-index="${index}"
+                        value="${escapeHTML(comment.name)}">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        class="comment-username-input"
+                        data-index="${index}"
+                        value="${escapeHTML(comment.username)}">
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Comment
+                    </label>
+
+                    <textarea
+                        class="comment-text-input"
+                        data-index="${index}">${escapeHTML(comment.text)}</textarea>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="field">
+
+                        <label>
+                            Comment Likes
+                        </label>
+
+                        <input
+                            type="number"
+                            class="comment-likes-input"
+                            data-index="${index}"
+                            value="${comment.likes}">
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Timestamp
+                        </label>
+
+                        <input
+                            type="text"
+                            class="comment-time-input"
+                            data-index="${index}"
+                            value="${escapeHTML(comment.time)}">
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        class="comment-verified-input"
+                        data-index="${index}"
+                        ${comment.verified
+                            ? "checked"
+                            : ""}>
+
+                    <label>
+                        Verified commenter
+                    </label>
+
+                </div>
+
+
+                <br>
+
+
+                <div class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        class="comment-pinned-input"
+                        data-index="${index}"
+                        ${comment.pinned
+                            ? "checked"
+                            : ""}>
+
+                    <label>
+                        Featured / Pinned
+                    </label>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(div);
+
+        }
+    );
+
+
+    bindCommentEvents();
+
+}
+
+
+/* =========================================================
+   COMMENT EVENTS
+========================================================= */
+
+function bindCommentEvents() {
+
+
+    document
+        .querySelectorAll(".remove-comment")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    const index =
+                        Number(
+                            this.dataset.index
+                        );
+
+                    comments.splice(
+                        index,
+                        1
+                    );
+
+                    renderCommentEditors();
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-name-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].name =
+                        this.value;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-username-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].username =
+                        this.value;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-text-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].text =
+                        this.value;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-likes-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].likes =
+                        Number(
+                            this.value
+                        ) || 0;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-time-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].time =
+                        this.value;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-verified-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                function() {
+
+                    comments[
+                        this.dataset.index
+                    ].verified =
+                        this.checked;
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-pinned-input")
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                function() {
+
+                    /*
+                       Only one comment can be pinned.
+                    */
+
+                    comments.forEach(
+                        c => c.pinned = false
+                    );
+
+
+                    comments[
+                        this.dataset.index
+                    ].pinned =
+                        this.checked;
+
+
+                    renderCommentEditors();
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".comment-avatar-upload")
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                function(event) {
+
+                    const file =
+                        event.target.files[0];
+
+                    if (!file) return;
+
+
+                    const index =
+                        Number(
+                            this.dataset.index
+                        );
+
+
+                    comments[index].avatar =
+                        URL.createObjectURL(file);
+
+
+                    updatePreview();
+
+                }
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   RENDER COMMENTS
+========================================================= */
+
+function renderComments() {
+
+    const container =
+        $("previewCommentsList");
+
+    container.innerHTML = "";
+
+
+    comments.forEach(
+        comment => {
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "comment";
+
+
+            if (comment.pinned) {
+                div.classList.add("pinned");
+            }
+
+
+            const verification =
+                comment.verified
+
+                    ? `<span class="verified">✓</span>`
+
+                    : "";
+
+
+            const pin =
+                comment.pinned
+
+                    ? `
+                        <div class="pin-label">
+                            📌 FEATURED COMMENT
+                        </div>
+                    `
+
+                    : "";
+
+
+            const username =
+                comment.username || "";
+
+
+            div.innerHTML = `
+
+                <img
+                    class="comment-avatar"
+                    src="${comment.avatar}"
+                    draggable="false">
+
+
+                <div class="comment-body">
+
+                    ${pin}
+
+
+                    <div class="comment-name-line">
+
+                        <span class="comment-name">
+                            ${escapeHTML(comment.name)}
+                        </span>
+
+                        ${verification}
+
+                    </div>
+
+
+                    <div class="comment-username">
+                        ${escapeHTML(username)}
+                    </div>
+
+
+                    <div class="comment-text">
+                        ${escapeHTML(comment.text)}
+                    </div>
+
+
+                    <div class="comment-meta">
+
+                        ♡ ${formatNumber(comment.likes)}
+                        · Reply
+                        · ${escapeHTML(comment.time)}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(div);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+$("themeBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            document.body.classList.toggle(
+                "dark"
+            );
+
+
+            this.textContent =
+                document.body.classList.contains("dark")
+
+                    ? "Light Editor"
+
+                    : "Dark Editor";
+
+        }
+    );
+
+
+/* =========================================================
+   PREVIEW ZOOM
+========================================================= */
+
+$("zoomIn")
+    .addEventListener(
+        "click",
+        function() {
+
+            previewScale += .1;
+
+            if (previewScale > 1.8) {
+                previewScale = 1.8;
+            }
+
+            $("post").style.transform =
+                `scale(${previewScale})`;
+
+        }
+    );
+
+
+$("zoomOut")
+    .addEventListener(
+        "click",
+        function() {
+
+            previewScale -= .1;
+
+            if (previewScale < .5) {
+                previewScale = .5;
+            }
+
+            $("post").style.transform =
+                `scale(${previewScale})`;
+
+        }
+    );
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+$("resetBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            $("displayName").value =
+                "Olivia Carter";
+
+            $("username").value =
+                "@oliviacarter";
+
+            $("caption").value =
+                "Finally got to share this with you guys. ❤️";
+
+            $("likes").value =
+                12400;
+
+            $("commentCount").value =
+                482;
+
+            $("shares").value =
+                231;
+
+            $("views").value =
+                184000;
+
+            $("saves").value =
+                1284;
+
+            $("timestamp").value =
+                "2h";
+
+            $("verified").checked =
+                true;
+
+            $("template").value =
+                "instagram";
+
+            $("imageZoom").value =
+                1;
+
+            $("avatarZoom").value =
+                1;
+
+            $("avatarX").value =
+                0;
+
+            $("avatarY").value =
+                0;
+
+
+            imagePosition = {
+                x: 0,
+                y: 0
+            };
+
+
+            avatarPosition = {
+                x: 0,
+                y: 0
+            };
+
+
+            comments = [
+
+                {
+                    name:
+                        "Alex Carter",
+
+                    username:
+                        "@alexcarter",
+
+                    text:
+                        "This is actually insane 😭",
+
+                    likes:
+                        124,
+
+                    time:
+                        "1h",
+
+                    verified:
+                        false,
+
+                    pinned:
+                        true,
+
+                    avatar:
+                        generateDefaultAvatar("A")
+                },
+
+                {
+                    name:
+                        "Marcus",
+
+                    username:
+                        "@marcus",
+
+                    text:
+                        "Okay this photo goes HARD.",
+
+                    likes:
+                        76,
+
+                    time:
+                        "48m",
+
+                    verified:
+                        true,
+
+                    pinned:
+                        false,
+
+                    avatar:
+                        generateDefaultAvatar("M")
+                }
+
+            ];
+
+
+            avatarURL =
+                generateDefaultAvatar("O");
+
+            postImageURL =
+                generateDefaultImage();
+
+
+            $("previewAvatar").src =
+                avatarURL;
+
+            $("previewImage").src =
+                postImageURL;
+
+
+            renderCommentEditors();
+
+            updatePreview();
+
+        }
+    );
+
+
+/* =========================================================
+   EXPORT PNG
+========================================================= */
+
+$("exportBtn")
+    .addEventListener(
+        "click",
+        async function() {
+
+            /*
+                Basic browser-native export.
+                For a production version, we should switch
+                this to html2canvas or a dedicated renderer.
+            */
+
+            const post =
+                $("post");
+
+
+            const clone =
+                post.cloneNode(true);
+
+
+            clone.style.transform =
+                "none";
+
+
+            clone.style.margin =
+                "0";
+
+
+            const width =
+                post.offsetWidth;
+
+
+            const height =
+                post.offsetHeight;
+
+
+            const serializer =
+                new XMLSerializer();
+
+
+            const html =
+                serializer.serializeToString(
+                    clone
+                );
+
+
+            const svg = `
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="${width}"
+                    height="${height}">
+
+                    <foreignObject
+                        width="100%"
+                        height="100%">
+
+                        <div
+                            xmlns="http://www.w3.org/1999/xhtml">
+
+                            ${html}
+
+                        </div>
+
+                    </foreignObject>
+
+                </svg>
+
+            `;
+
+
+            const blob =
+                new Blob(
+                    [svg],
+                    {
+                        type:
+                            "image/svg+xml;charset=utf-8"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(blob);
+
+
+            const image =
+                new Image();
+
+
+            image.onload =
+                function() {
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+
+                    canvas.width =
+                        width * 2;
+
+                    canvas.height =
+                        height * 2;
+
+
+                    const ctx =
+                        canvas.getContext("2d");
+
+
+                    ctx.scale(2, 2);
+
+
+                    ctx.drawImage(
+                        image,
+                        0,
+                        0,
+                        width,
+                        height
+                    );
+
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+
+                    canvas.toBlob(
+                        function(result) {
+
+                            const downloadURL =
+                                URL.createObjectURL(
+                                    result
+                                );
+
+
+                            const a =
+                                document.createElement(
+                                    "a"
+                                );
+
+
+                            a.href =
+                                downloadURL;
+
+                            a.download =
+                                "postforge-post.png";
+
+
+                            a.click();
+
+
+                            URL.revokeObjectURL(
+                                downloadURL
+                            );
+
+                        },
+                        "image/png"
+                    );
+
+                };
+
+
+            image.src =
+                url;
+
+        }
+    );
+
+
+/* =========================================================
+   DEFAULT COMMENTS
+========================================================= */
+
+comments = [
+
+    {
+        name:
+            "Alex Carter",
+
+        username:
+            "@alexcarter",
+
+        text:
+            "This is actually insane 😭",
+
+        likes:
+            124,
+
+        time:
+            "1h",
+
+        verified:
+            false,
+
+        pinned:
+            true,
+
+        avatar:
+            generateDefaultAvatar("A")
+
+    },
+
+    {
+        name:
+            "Marcus",
+
+        username:
+            "@marcus",
+
+        text:
+            "Okay this photo goes HARD.",
+
+        likes:
+            76,
+
+        time:
+            "48m",
+
+        verified:
+            true,
+
+        pinned:
+            false,
+
+        avatar:
+            generateDefaultAvatar("M")
+
+    }
+
+];
+
+
+renderCommentEditors();
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
