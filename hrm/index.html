@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentFlow HR - Manager Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for email client aesthetic */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 0.8);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(71, 85, 105, 1);
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden bg-slate-950 text-slate-100">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 h-16 px-6 flex items-center justify-between shrink-0 z-20">
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 rounded-lg shadow-lg">
+                <i class="fa-solid fa-briefcase text-white text-lg"></i>
+                <span class="font-bold text-white tracking-wide text-lg">ZSMP-MAIL <span class="text-xs font-normal bg-white/20 px-2 py-0.5 rounded-full uppercase ml-1">HR Pro</span></span>
+            </div>
+            <div class="h-6 w-px bg-slate-800"></div>
+            <span class="text-sm text-slate-400 font-medium hidden md:inline-flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle"></span>
+                ZanderSMP HQ HR Portal
+            </span>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="triggerNewCandidate()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium text-xs md:text-sm rounded-lg transition shadow-md shadow-indigo-600/20 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-xs"></i>
+                <span>Refresh Application Emails</span>
+            </button>
+            
+            <div class="h-6 w-px bg-slate-800 hidden sm:block"></div>
+
+            <div class="flex items-center space-x-3 pl-2">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-blue-500/50">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                </div>
+                <div class="hidden lg:block text-left">
+                    <div class="text-xs font-semibold text-slate-200">Alex Zander</div>
+                    <div class="text-[10px] text-slate-400">Lead Hiring Manager</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Primary Left Sidebar -->
+        <aside class="w-16 md:w-60 bg-slate-900/90 border-r border-slate-800/80 flex flex-col shrink-0">
+            <div class="p-3 space-y-1">
+                <button id="nav-btn-inbox" onclick="switchTab('inbox')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-200 bg-blue-600/20 text-blue-400 font-medium transition border border-blue-500/30">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-inbox text-base w-5 text-center"></i>
+                        <span class="hidden md:inline text-sm">Inbox</span>
+                    </div>
+                    <span id="unread-count-badge" class="hidden md:inline-block bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                </button>
+
+                <button id="nav-btn-positions" onclick="switchTab('positions')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 font-medium transition">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-layer-group text-base w-5 text-center"></i>
+                        <span class="hidden md:inline text-sm">Open Positions</span>
+                    </div>
+                    <span id="open-positions-count" class="hidden md:inline-block bg-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-full font-mono">7</span>
+                </button>
+
+                <button id="nav-btn-sent" onclick="switchTab('sent')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 font-medium transition">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-paper-plane text-base w-5 text-center"></i>
+                        <span class="hidden md:inline text-sm">Sent Log</span>
+                    </div>
+                    <span id="sent-count-badge" class="hidden md:inline-block bg-slate-800 text-slate-400 text-xs px-2 py-0.5 rounded-full font-mono">0</span>
+                </button>
+            </div>
+
+            <div class="mt-auto p-4 border-t border-slate-800 hidden md:block">
+                <div class="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                    <div class="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-2">System Status</div>
+                    <div class="flex items-center justify-between text-xs text-slate-300 mb-1">
+                        <span>Domains:</span>
+                        <span class="font-mono text-emerald-400">zandersmp.xyz</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Auto-Apply:</span>
+                        <span class="text-blue-400 flex items-center gap-1"><i class="fa-solid fa-circle text-[8px] animate-pulse"></i> Active</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="flex-1 flex overflow-hidden relative">
+
+            <!-- ================= INBOX VIEW ================= -->
+            <div id="view-inbox" class="flex-1 flex w-full h-full">
+                
+                <!-- Email List Panel -->
+                <div class="w-full sm:w-80 md:w-96 bg-slate-900 border-r border-slate-800/80 flex flex-col shrink-0">
+                    <!-- Search & Filters -->
+                    <div class="p-3 border-b border-slate-800/80 space-y-2">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                            <input type="text" id="email-search" oninput="renderEmailList()" placeholder="Search candidates or emails..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        
+                        <!-- Filter Pills -->
+                        <div class="flex items-center gap-1 overflow-x-auto pb-1 text-xs">
+                            <button onclick="setFilter('all')" id="filter-all" class="px-2.5 py-1 rounded-md bg-blue-600/30 text-blue-300 border border-blue-500/40 font-medium shrink-0">All</button>
+                            <button onclick="setFilter('unread')" id="filter-unread" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200 font-medium shrink-0">Unread</button>
+                            <button onclick="setFilter('applications')" id="filter-applications" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200 font-medium shrink-0">Applications</button>
+                            <button onclick="setFilter('replies')" id="filter-replies" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200 font-medium shrink-0">Replies</button>
+                        </div>
+                    </div>
+
+                    <!-- Email List Scrollable -->
+                    <div id="email-list" class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Email Reader & Resume Display Panel -->
+                <div class="hidden sm:flex flex-1 flex-col bg-slate-950 overflow-hidden" id="email-reader-pane">
+                    
+                    <!-- Blank Placeholder when no email selected -->
+                    <div id="email-empty-state" class="flex-1 flex flex-col items-center justify-center text-slate-500 p-8 text-center">
+                        <div class="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-4 text-slate-600 text-2xl">
+                            <i class="fa-regular fa-envelope-open"></i>
+                        </div>
+                        <h3 class="text-slate-300 font-semibold mb-1">No Email Selected</h3>
+                        <p class="text-xs max-w-sm">Choose an incoming application or reply from the inbox list on the left to review candidate resumes and make hiring decisions.</p>
+                    </div>
+
+                    <!-- Email Reader Content -->
+                    <div id="email-content-wrapper" class="flex-1 flex flex-col overflow-hidden hidden">
+                        <!-- Email Header Bar -->
+                        <div class="p-6 border-b border-slate-800 bg-slate-900/40 flex flex-col gap-4">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h2 id="view-subject" class="text-xl font-bold text-slate-100 mb-1">--</h2>
+                                    <div class="flex items-center space-x-2 text-xs">
+                                        <span id="view-badge-type" class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-medium">Application</span>
+                                        <span id="view-role-tag" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium">Senior Frontend Engineer</span>
+                                    </div>
+                                </div>
+                                <span id="view-timestamp" class="text-xs text-slate-500 font-mono">Just now</span>
+                            </div>
+
+                            <div class="flex items-center space-x-3 bg-slate-900/80 p-3 rounded-lg border border-slate-800/80">
+                                <div id="view-avatar" class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shrink-0 uppercase">
+                                    AR
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <div id="view-sender-name" class="text-sm font-semibold text-slate-200 truncate">Alex Rivera</div>
+                                    </div>
+                                    <div class="text-xs text-slate-400 flex items-center gap-1 font-mono">
+                                        <i class="fa-regular fa-envelope text-[10px]"></i>
+                                        <span id="view-sender-email" class="truncate">alex.m.rivera@careers.zandersmp.xyz</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Body & Resume Scroll Container -->
+                        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                            
+                            <!-- Cover Letter / Email Message -->
+                            <div class="bg-slate-900/60 rounded-xl p-5 border border-slate-800/80 text-sm text-slate-300 leading-relaxed space-y-3">
+                                <div id="view-email-message">
+                                    <!-- Message rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Resume Display Section (Hidden if reply email) -->
+                            <div id="resume-wrapper" class="space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                                        <i class="fa-solid fa-file-invoice text-blue-400"></i>
+                                        Attached Resume Document
+                                    </h3>
+                                    <div class="flex items-center gap-2 text-xs text-slate-400">
+                                        <a id="view-github" href="#" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <span>•</span>
+                                        <a id="view-portfolio" href="#" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1"><i class="fa-solid fa-globe"></i> Portfolio</a>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-900 rounded-xl p-6 border border-slate-800 shadow-xl space-y-6">
+                                    <!-- Resume Section: Summary -->
+                                    <div>
+                                        <h4 class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">Professional Summary</h4>
+                                        <p id="resume-summary" class="text-sm text-slate-300 leading-normal">---</p>
+                                    </div>
+
+                                    <!-- Resume Section: Work Experience -->
+                                    <div>
+                                        <h4 class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-3">Work History</h4>
+                                        <div id="resume-experience" class="space-y-3">
+                                            <!-- Dynamically inserted history items -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Resume Section: Skills -->
+                                    <div>
+                                        <h4 class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-2">Core Competencies & Skills</h4>
+                                        <div id="resume-skills" class="flex flex-wrap gap-1.5">
+                                            <!-- Dynamic skill badges -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Resume Section: Education -->
+                                    <div>
+                                        <h4 class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">Education</h4>
+                                        <p id="resume-education" class="text-sm text-slate-300 font-medium">---</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- HR Decision Action Dock -->
+                        <div id="action-dock" class="p-4 border-t border-slate-800 bg-slate-900/90 backdrop-blur shrink-0 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hiring Decision Action</span>
+                                <span class="text-[11px] text-slate-500">Pick quick tags or write custom feedback</span>
+                            </div>
+
+                            <!-- Preset Quick Feedback Tags -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+                                <span class="text-[11px] text-slate-500 font-medium shrink-0">Preset tags:</span>
+                                <button onclick="addPresetFeedback('Great culture fit & skills match.')" class="px-2 py-0.5 rounded text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shrink-0 transition">+ Great fit</button>
+                                <button onclick="addPresetFeedback('Lacks required years of senior experience.')" class="px-2 py-0.5 rounded text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shrink-0 transition">+ Missing key experience</button>
+                                <button onclick="addPresetFeedback('Salary expectations are above position budget.')" class="px-2 py-0.5 rounded text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shrink-0 transition">+ Salary mismatch</button>
+                                <button onclick="addPresetFeedback('Overqualified for this specific entry role.')" class="px-2 py-0.5 rounded text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shrink-0 transition">+ Overqualified</button>
+                            </div>
+
+                            <!-- Feedback Input Field -->
+                            <div>
+                                <textarea id="decision-reason" rows="2" placeholder="Write feedback note or rejection reason for candidate (optional)..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition resize-none"></textarea>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="executeDecision('interview')" class="px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-check"></i> Request Interview
+                                </button>
+                                <button onclick="executeDecision('reject')" class="px-4 py-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-xmark"></i> Reject Candidate
+                                </button>
+                                <button onclick="executeDecision('accept')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-emerald-600/20 transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-check"></i> Accept & Send Offer
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================= OPEN POSITIONS VIEW ================= -->
+            <div id="view-positions" class="flex-1 hidden bg-slate-950 p-6 overflow-y-auto">
+                <div class="max-w-6xl mx-auto space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-100">Active Job Postings</h2>
+                            <p class="text-xs text-slate-400 mt-1">Manage open requisitions, compensation ranges, and live applicant metrics.</p>
+                        </div>
+                        <button onclick="alert('Position creation modal simulated!')" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Create Job Requisition
+                        </button>
+                    </div>
+
+                    <!-- Job Cards Grid -->
+                    <div id="positions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SENT MAIL LOG VIEW ================= -->
+            <div id="view-sent" class="flex-1 hidden bg-slate-950 p-6 overflow-y-auto">
+                <div class="max-w-6xl mx-auto space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-100">Sent Decisions & Audit Log</h2>
+                            <p class="text-xs text-slate-400 mt-1">Complete record of offer letters, rejection notices, and interview requests sent out.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Decision</th>
+                                    <th class="px-4 py-3">Candidate</th>
+                                    <th class="px-4 py-3">Role</th>
+                                    <th class="px-4 py-3">Feedback Provided</th>
+                                    <th class="px-4 py-3 text-right">Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sent-log-table" class="divide-y divide-slate-800/60">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Data Structures & Configs
+        const DOMAINS = [
+            'careers.zandersmp.xyz',
+            'apply.zandersmp.xyz',
+            'mail.zandersmp.xyz',
+            'jobs.zandersmp.xyz',
+            'talent.zandersmp.xyz',
+            'recruiting.zandersmp.xyz'
+        ];
+
+        const FIRST_NAMES = [
+            'Alex', 'Jordan', 'Taylor', 'Morgan', 'Chris', 'Sam', 'Riley', 'Avery', 'Dakota',
+            'Ethan', 'Sophia', 'Liam', 'Olivia', 'Noah', 'Ava', 'Lucas', 'Mia', 'Benjamin',
+            'Evelyn', 'Mason', 'Harper', 'Sebastian', 'Camila', 'Jack', 'Gianna', 'Alexander'
+        ];
+
+        const MIDDLE_NAMES = [
+            'D.', 'M.', 'James', 'Lee', 'Alexander', 'Marie', 'Ann', 'Rae', 'Evelyn', 'Ray',
+            'K.', 'T.', 'R.', 'Elizabeth', 'Grace', 'Joseph', 'J.', 'C.', 'S.'
+        ];
+
+        const LAST_NAMES = [
+            'Rivera', 'Lee', 'Vance', 'Smith', 'Johnson', 'Chen', 'Patel', 'Kim', 'Garcia',
+            'O\'Connor', 'Mendoza', 'Kowalski', 'Gupta', 'Wong', 'Dubois', 'Abebe', 'Yamamoto',
+            'Novak', 'Schneider', 'Rossi', 'Takahashi', 'Al-Mansoor', 'Snyder', 'Hernandez'
+        ];
+
+        const POSITIONS = [
+            { id: 'fe', title: 'Senior Frontend Engineer', dept: 'Engineering', salary: '$130k - $160k', headcount: 2, filled: 0 },
+            { id: 'devops', title: 'DevOps Specialist', dept: 'Infrastructure', salary: '$140k - $175k', headcount: 1, filled: 0 },
+            { id: 'pml', title: 'Product Marketing Lead', dept: 'Marketing', salary: '$115k - $145k', headcount: 1, filled: 0 },
+            { id: 'aiml', title: 'AI/ML Research Engineer', dept: 'AI Labs', salary: '$160k - $210k', headcount: 3, filled: 1 },
+            { id: 'sec', title: 'Cybersecurity Analyst', dept: 'Security', salary: '$120k - $150k', headcount: 1, filled: 0 },
+            { id: 'fin', title: 'Financial Operations Specialist', dept: 'Finance', salary: '$95k - $125k', headcount: 2, filled: 0 },
+            { id: 'cx', title: 'Customer Experience Lead', dept: 'Support', salary: '$85k - $110k', headcount: 1, filled: 0 }
+        ];
+
+        const COMPANY_NAMES = [
+            'Nexus Tech', 'CloudScale Inc', 'Apex Digital', 'Quantum Labs', 'Vanguard Media',
+            'AeroSystems', 'Hyperion Software', 'Pulse Metrics', 'ByteWorks', 'Starlight Data'
+        ];
+
+        const UNIVERSITIES = [
+            'B.S. in Computer Science, MIT',
+            'B.A. in Communications, UC Berkeley',
+            'M.S. in Software Engineering, Stanford',
+            'B.S. in Statistics & Data, Carnegie Mellon',
+            'B.B.A. in Business Admin, NYU Stern',
+            'M.S. in Cybersecurity, Georgia Tech'
+        ];
+
+        // Global State
+        let emails = [];
+        let sentLog = [];
+        let activeEmailId = null;
+        let activeTab = 'inbox';
+        let activeFilter = 'all';
+
+        // Procedural Candidate Generator
+        function generateRandomCandidate(forcedPosition = null) {
+            const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+            const hasMiddle = Math.random() > 0.3;
+            const middleName = hasMiddle ? MIDDLE_NAMES[Math.floor(Math.random() * MIDDLE_NAMES.length)] : '';
+            const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+            
+            const fullName = hasMiddle ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
+            const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+            
+            // Clean email format
+            const cleanFirst = firstName.toLowerCase();
+            const cleanLast = lastName.toLowerCase().replace(/[^a-z]/g, '');
+            const cleanMid = middleName ? middleName.toLowerCase().replace(/[^a-z]/g, '') : '';
+            const emailAddr = cleanMid ? `${cleanFirst}.${cleanMid}.${cleanLast}@${domain}` : `${cleanFirst}.${cleanLast}@${domain}`;
+
+            const targetPos = forcedPosition || POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+
+            // Generate customized experience
+            const expYears = Math.floor(Math.random() * 8) + 2;
+            const exp1Comp = COMPANY_NAMES[Math.floor(Math.random() * COMPANY_NAMES.length)];
+            const exp2Comp = COMPANY_NAMES[Math.floor(Math.random() * COMPANY_NAMES.length)];
+
+            const skillSets = {
+                'Engineering': ['React', 'TypeScript', 'Tailwind CSS', 'GraphQL', 'Next.js', 'WebAssembly', 'Jest'],
+                'Infrastructure': ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'CI/CD Pipelines', 'Linux', 'Python'],
+                'Marketing': ['SEO/SEM', 'Growth Hacking', 'Content Strategy', 'HubSpot', 'Google Analytics', 'Brand Design'],
+                'AI Labs': ['PyTorch', 'TensorFlow', 'LLM Fine-tuning', 'Python', 'CUDA', 'Vector Databases', 'NLP'],
+                'Security': ['Penetration Testing', 'SOC2 Compliance', 'Zero Trust Architecture', 'Python', 'Wireshark'],
+                'Finance': ['Financial Modeling', 'Excel / VBA', 'QuickBooks', 'Risk Assessment', 'NetSuite'],
+                'Support': ['Zendesk', 'Intercom', 'Conflict Resolution', 'SLA Management', 'Customer Retention']
+            };
+
+            const skills = skillSets[targetPos.dept] || ['Communication', 'Project Management', 'Problem Solving'];
+
+            const candidate = {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                name: fullName,
+                email: emailAddr,
+                role: targetPos.title,
+                department: targetPos.dept,
+                experienceYears: `${expYears} Years`,
+                skills: skills,
+                education: UNIVERSITIES[Math.floor(Math.random() * UNIVERSITIES.length)],
+                github: `github.com/${cleanFirst}${cleanLast}`,
+                portfolio: `https://${cleanFirst}${cleanLast}.dev`,
+                history: [
+                    { title: `Senior ${targetPos.title}`, company: exp1Comp, dates: '2022 - Present', desc: 'Led high-impact initiatives, optimized workflows, and improved key core metrics by 35%.' },
+                    { title: `${targetPos.title}`, company: exp2Comp, dates: '2019 - 2022', desc: 'Collaborated with cross-functional teams to deliver scaleable projects on tight deadlines.' }
+                ],
+                summary: `Results-driven professional with ${expYears}+ years of experience in ${targetPos.dept.toLowerCase()}. Skilled in modern methodologies, high team collaboration, and delivering resilient outcomes.`
+            };
+
+            const coverLetters = [
+                `Dear Hiring Team at ZanderSMP,<br><br>I am writing to express my strong interest in the <strong>${targetPos.title}</strong> position. With over ${expYears} years of hands-on experience, I have developed expertise that aligns directly with your current goals.<br><br>Please review my attached resume details below. I look forward to hearing from you!`,
+                `Hi HR Team,<br><br>I've been following ZanderSMP's rapid growth and would love to bring my skills as a <strong>${targetPos.title}</strong> to your department. I specialize in driving technical excellence and high performance.<br><br>My full portfolio and experience breakdown are provided in my attached application.`,
+                `Greetings,<br><br>Enclosed is my application for the open <strong>${targetPos.title}</strong> role. I bring a strong background in ${skills.slice(0, 3).join(', ')} and am confident I can make an immediate contribution.`
+            ];
+
+            const emailObject = {
+                id: candidate.id,
+                type: 'application',
+                sender: candidate.name,
+                address: candidate.email,
+                subject: `Application: ${targetPos.title} - ${candidate.name}`,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                unread: true,
+                status: 'pending', // pending, accepted, rejected, interview
+                body: coverLetters[Math.floor(Math.random() * coverLetters.length)],
+                candidate: candidate
+            };
+
+            return emailObject;
+        }
+
+        // Initialize App State
+        function initApp() {
+            // Seed initial applicants
+            for (let i = 0; i < 4; i++) {
+                emails.push(generateRandomCandidate());
+            }
+            renderEmailList();
+            renderPositions();
+            updateBadges();
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            // Hide all views
+            document.getElementById('view-inbox').classList.add('hidden');
+            document.getElementById('view-positions').classList.add('hidden');
+            document.getElementById('view-sent').classList.add('hidden');
+
+            // Reset navigation styles
+            ['inbox', 'positions', 'sent'].forEach(t => {
+                const btn = document.getElementById(`nav-btn-${t}`);
+                btn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 font-medium transition";
+            });
+
+            // Activate active tab
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-btn-${tab}`);
+            activeBtn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-200 bg-blue-600/20 text-blue-400 font-medium transition border border-blue-500/30";
+
+            if (tab === 'positions') renderPositions();
+            if (tab === 'sent') renderSentLog();
+        }
+
+        function setFilter(filter) {
+            activeFilter = filter;
+            ['all', 'unread', 'applications', 'replies'].forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (f === filter) {
+                    btn.className = "px-2.5 py-1 rounded-md bg-blue-600/30 text-blue-300 border border-blue-500/40 font-medium shrink-0";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200 font-medium shrink-0";
+                }
+            });
+            renderEmailList();
+        }
+
+        function renderEmailList() {
+            const listEl = document.getElementById('email-list');
+            const searchVal = document.getElementById('email-search').value.toLowerCase();
+            listEl.innerHTML = '';
+
+            const filtered = emails.filter(email => {
+                const matchesSearch = email.sender.toLowerCase().includes(searchVal) || 
+                                     email.subject.toLowerCase().includes(searchVal) ||
+                                     email.address.toLowerCase().includes(searchVal);
+                
+                if (!matchesSearch) return false;
+
+                if (activeFilter === 'unread') return email.unread;
+                if (activeFilter === 'applications') return email.type === 'application';
+                if (activeFilter === 'replies') return email.type === 'reply';
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `<div class="p-8 text-center text-xs text-slate-500">No emails found in this view.</div>`;
+                return;
+            }
+
+            filtered.forEach(email => {
+                const item = document.createElement('div');
+                const isActive = email.id === activeEmailId;
+                
+                item.className = `p-3.5 cursor-pointer transition border-b border-slate-800/40 flex flex-col gap-1.5 ${
+                    isActive ? 'bg-slate-800/80 border-l-4 border-l-blue-500' : 'hover:bg-slate-900/60'
+                } ${email.unread ? 'bg-slate-900/90 font-semibold' : ''}`;
+
+                item.onclick = () => selectEmail(email.id);
+
+                const badgeBg = email.type === 'application' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+                const statusBadge = email.status !== 'pending' ? `<span class="text-[10px] px-1.5 py-0.2 rounded uppercase font-bold ${
+                    email.status === 'accepted' ? 'bg-emerald-500/20 text-emerald-400' :
+                    email.status === 'rejected' ? 'bg-rose-500/20 text-rose-400' : 'bg-indigo-500/20 text-indigo-400'
+                }">${email.status}</span>` : '';
+
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs ${email.unread ? 'text-slate-100 font-bold' : 'text-slate-300'} truncate max-w-[180px]">${email.sender}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">${email.timestamp}</span>
+                    </div>
+                    <div class="text-xs text-slate-400 truncate font-normal">${email.subject}</div>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="text-[10px] px-2 py-0.5 rounded border ${badgeBg}">${email.type === 'application' ? 'Application' : 'Reply'}</span>
+                        <div class="flex items-center gap-1">
+                            ${statusBadge}
+                            ${email.unread ? '<span class="w-2 h-2 rounded-full bg-blue-500"></span>' : ''}
+                        </div>
+                    </div>
+                `;
+
+                listEl.appendChild(item);
+            });
+        }
+
+        function selectEmail(id) {
+            activeEmailId = id;
+            const email = emails.find(e => e.id === id);
+            if (!email) return;
+
+            email.unread = false;
+            updateBadges();
+            renderEmailList();
+
+            document.getElementById('email-empty-state').classList.add('hidden');
+            document.getElementById('email-content-wrapper').classList.remove('hidden');
+
+            // Render Email Meta
+            document.getElementById('view-subject').innerText = email.subject;
+            document.getElementById('view-sender-name').innerText = email.sender;
+            document.getElementById('view-sender-email').innerText = email.address;
+            document.getElementById('view-timestamp').innerText = email.timestamp;
+
+            // Initials avatar
+            const names = email.sender.split(' ');
+            const initials = names.length > 1 ? `${names[0][0]}${names[names.length-1][0]}` : names[0][0];
+            document.getElementById('view-avatar').innerText = initials;
+
+            document.getElementById('view-email-message').innerHTML = email.body;
+
+            const resumeWrapper = document.getElementById('resume-wrapper');
+            const actionDock = document.getElementById('action-dock');
+
+            if (email.type === 'application' && email.candidate) {
+                resumeWrapper.classList.remove('hidden');
+                document.getElementById('view-role-tag').innerText = email.candidate.role;
+                document.getElementById('view-github').href = `https://${email.candidate.github}`;
+                document.getElementById('view-portfolio').href = email.candidate.portfolio;
+
+                // Resume Fields
+                document.getElementById('resume-summary').innerText = email.candidate.summary;
+                document.getElementById('resume-education').innerText = email.candidate.education;
+
+                // Skills
+                const skillsEl = document.getElementById('resume-skills');
+                skillsEl.innerHTML = email.candidate.skills.map(s => 
+                    `<span class="px-2.5 py-1 bg-slate-800 text-slate-300 text-xs rounded-md border border-slate-700/80 font-medium">${s}</span>`
+                ).join('');
+
+                // Work History
+                const expEl = document.getElementById('resume-experience');
+                expEl.innerHTML = email.candidate.history.map(h => `
+                    <div class="border-l-2 border-blue-500/50 pl-3 py-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-200">${h.title} @ ${h.company}</span>
+                            <span class="text-slate-500 font-mono">${h.dates}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">${h.desc}</p>
+                    </div>
+                `).join('');
+
+                // Action dock visibility
+                if (email.status === 'pending') {
+                    actionDock.classList.remove('hidden');
+                } else {
+                    actionDock.classList.add('hidden');
+                }
+
+            } else {
+                // Reply Email View
+                resumeWrapper.classList.add('hidden');
+                actionDock.classList.add('hidden');
+                document.getElementById('view-role-tag').innerText = "Candidate Reply";
+            }
+        }
+
+        function addPresetFeedback(text) {
+            const textarea = document.getElementById('decision-reason');
+            textarea.value = text;
+        }
+
+        function executeDecision(action) {
+            const email = emails.find(e => e.id === activeEmailId);
+            if (!email || email.status !== 'pending') return;
+
+            const feedback = document.getElementById('decision-reason').value.trim();
+            email.status = action === 'accept' ? 'accepted' : (action === 'reject' ? 'rejected' : 'interview');
+
+            // Add to sent log
+            sentLog.unshift({
+                id: Date.now(),
+                decision: action,
+                candidate: email.sender,
+                role: email.candidate.role,
+                feedback: feedback || 'No custom feedback attached.',
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            // Hide action dock for this email
+            document.getElementById('action-dock').classList.add('hidden');
+            document.getElementById('decision-reason').value = '';
+
+            // Render updates
+            renderEmailList();
+            updateBadges();
+
+            // Trigger candidate reply after realistic delay
+            setTimeout(() => {
+                generateCandidateReply(email, action, feedback);
+            }, 1200);
+        }
+
+        function generateCandidateReply(originalEmail, decision, feedback) {
+            const candidate = originalEmail.candidate;
+            let replySubject = `Re: ${originalEmail.subject}`;
+            let replyBody = "";
+
+            if (decision === 'accept') {
+                const acceptResponses = [
+                    `WOW! Thank you so much! I am absolutely thrilled to accept the offer for the <strong>${candidate.role}</strong> position at ZanderSMP.<br><br>${feedback ? `Thank you for your encouraging note: "${feedback}". ` : ''}Please let me know what paperwork or onboarding steps I should complete next.`,
+                    `Thank you Alex! This is amazing news. I'm excited to join the team. I can start as early as next Monday.<br><br>Best regards,<br>${candidate.name}`
+                ];
+                replyBody = acceptResponses[Math.floor(Math.random() * acceptResponses.length)];
+
+            } else if (decision === 'reject') {
+                if (feedback) {
+                    const dramaticRejections = [
+                        `Bruh... why did you reject me for: "${feedback}"?! 😭<br><br>I literally spent 3 hours customizing my portfolio for Zandersmp.xyz domain! Honestly shocked, but thanks for the response I guess...`,
+                        `Thank you for the update. While I am disappointed regarding the reason ("${feedback}"), I appreciate the honest constructive feedback. I will continue working on my skillsets.<br><br>Best,<br>${candidate.name}`,
+                        `Bruh moment... rejected because "${feedback}"? Fair enough I suppose! Thanks for considering my application anyway.<br><br>Regards,<br>${candidate.name}`
+                    ];
+                    replyBody = dramaticRejections[Math.floor(Math.random() * dramaticRejections.length)];
+                } else {
+                    replyBody = `Hi HR,<br><br>Thank you for getting back to me. I'm disappointed I won't be moving forward for the ${candidate.role} position, but I appreciate the opportunity to apply.<br><br>Best regards,<br>${candidate.name}`;
+                }
+            } else if (decision === 'interview') {
+                replyBody = `Hi Alex,<br><br>That sounds wonderful! I would love to schedule an interview for the <strong>${candidate.role}</strong> position.<br><br>${feedback ? `Regarding your note ("${feedback}"): I am happy to discuss this in detail during our call. ` : ''}I am available anytime this Wednesday or Thursday afternoon.<br><br>Best,<br>${candidate.name}`;
+            }
+
+            const replyEmail = {
+                id: Date.now() + Math.floor(Math.random() * 500),
+                type: 'reply',
+                sender: candidate.name,
+                address: candidate.email,
+                subject: replySubject,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                unread: true,
+                status: decision,
+                body: replyBody,
+                candidate: candidate
+            };
+
+            emails.unshift(replyEmail);
+            updateBadges();
+            renderEmailList();
+        }
+
+        function triggerNewCandidate() {
+            const newApplicant = generateRandomCandidate();
+            emails.unshift(newApplicant);
+            updateBadges();
+            renderEmailList();
+        }
+
+        function updateBadges() {
+            const unreadCount = emails.filter(e => e.unread).length;
+            const badgeEl = document.getElementById('unread-count-badge');
+            badgeEl.innerText = unreadCount;
+            badgeEl.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+
+            document.getElementById('sent-count-badge').innerText = sentLog.length;
+        }
+
+        function renderPositions() {
+            const grid = document.getElementById('positions-grid');
+            grid.innerHTML = POSITIONS.map(pos => {
+                const count = emails.filter(e => e.candidate && e.candidate.role === pos.title).length;
+                return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition space-y-4">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${pos.dept}</span>
+                                <h3 class="font-bold text-slate-100 text-base mt-2">${pos.title}</h3>
+                            </div>
+                            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">${pos.salary}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+                            <div>
+                                <span class="block text-[10px] text-slate-500 uppercase">Headcount</span>
+                                <span class="font-semibold text-slate-200">${pos.filled} / ${pos.headcount} Filled</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-slate-500 uppercase">Applicants</span>
+                                <span class="font-semibold text-slate-200">${count} Received</span>
+                            </div>
+                        </div>
+
+                        <button onclick="triggerSpecificApplicant('${pos.id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700">
+                            Simulate Applicant for Role
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function triggerSpecificApplicant(posId) {
+            const targetPos = POSITIONS.find(p => p.id === posId);
+            const applicant = generateRandomCandidate(targetPos);
+            emails.unshift(applicant);
+            switchTab('inbox');
+            selectEmail(applicant.id);
+        }
+
+        function renderSentLog() {
+            const tbody = document.getElementById('sent-log-table');
+            if (sentLog.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">No decisions executed yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = sentLog.map(log => `
+                <tr class="hover:bg-slate-900/50">
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                            log.decision === 'accept' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                            log.decision === 'reject' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                            'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                        }">${log.decision}</span>
+                    </td>
+                    <td class="px-4 py-3 font-semibold text-slate-200">${log.candidate}</td>
+                    <td class="px-4 py-3 text-slate-400">${log.role}</td>
+                    <td class="px-4 py-3 text-slate-300 italic max-w-xs truncate">${log.feedback}</td>
+                    <td class="px-4 py-3 text-right font-mono text-slate-500">${log.timestamp}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Auto background simulation every 45 seconds
+        setInterval(() => {
+            if (Math.random() > 0.4) {
+                emails.unshift(generateRandomCandidate());
+                updateBadges();
+                if (activeTab === 'inbox') renderEmailList();
+            }
+        }, 45000);
+
+        // Run Initialization on Load
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
