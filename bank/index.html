@@ -88,6 +88,12 @@
       box-shadow: 0 20px 40px -10px rgba(245, 158, 11, 0.3);
     }
 
+    .card-platinum {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 40%, #475569 80%, #64748b 100%);
+      border: 1px solid rgba(203, 213, 225, 0.6);
+      box-shadow: 0 20px 40px -10px rgba(100, 116, 139, 0.3);
+    }
+
     .card-ruby {
       background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 40%, #9f1239 80%, #be123c 100%);
       border: 1px solid rgba(251, 113, 133, 0.5);
@@ -136,7 +142,7 @@
 
   <!-- Modal Dialog Container -->
   <div id="modal-container" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
-    <div id="modal-content" class="glass-panel w-full max-w-md p-6 rounded-2xl shadow-2xl border border-yellow-500/20 transform transition-all">
+    <div id="modal-content" class="glass-panel w-full max-w-md p-6 rounded-2xl shadow-2xl border border-yellow-500/25 transform transition-all">
       <!-- Injected dynamically -->
     </div>
   </div>
@@ -191,13 +197,13 @@
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">First Name *</label>
-              <input type="text" id="reg-firstname" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Jason">
+              <input type="text" id="reg-firstname" required class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Kingsley">
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Middle Name (Optional)</label>
-            <input type="text" id="reg-middlename" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Cole">
+            <input type="text" id="reg-middlename" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Alistair">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -206,7 +212,7 @@
               <input type="date" id="reg-dob" required class="glass-input w-full px-4 py-3 rounded-xl text-sm">
             </div>
             <div>
-              <label class="block text-xs font-medium text-slate-300 mb-1">Citizenship *</label>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Citizenship * (Alphabetically Sorted)</label>
               <select id="reg-citizenship" required class="glass-input w-full px-4 py-3 rounded-xl text-sm bg-slate-900">
                 <option value="" disabled selected>Select Citizenship</option>
                 <option value="Anaso">Anaso</option>
@@ -233,12 +239,12 @@
           <h2 class="text-lg font-semibold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
             <i class="fa-solid fa-gem text-yellow-500"></i> Select Initial Deposit Tier
           </h2>
-          <p class="text-xs text-slate-400">Your initial deposit range determines your elite tier status and randomized opening balance range.</p>
+          <p class="text-xs text-slate-400">Your initial deposit range determines your elite tier status and opening balance range.</p>
 
-          <div class="space-y-3 pt-2">
+          <div class="space-y-2.5 pt-1">
             <!-- Tier 1 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier1" class="text-yellow-500 focus:ring-yellow-500" checked onchange="updateTierPreview(1)">
+              <input type="radio" name="deposit-tier" value="tier1" class="text-yellow-500 focus:ring-yellow-500" checked>
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
                   <div class="font-semibold text-slate-200 text-sm">Silver Tier</div>
@@ -250,7 +256,7 @@
 
             <!-- Tier 2 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier2" class="text-yellow-500 focus:ring-yellow-500" onchange="updateTierPreview(2)">
+              <input type="radio" name="deposit-tier" value="tier2" class="text-yellow-500 focus:ring-yellow-500">
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
                   <div class="font-semibold text-blue-400 text-sm">Sapphire Tier</div>
@@ -262,7 +268,7 @@
 
             <!-- Tier 3 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier3" class="text-yellow-500 focus:ring-yellow-500" onchange="updateTierPreview(3)">
+              <input type="radio" name="deposit-tier" value="tier3" class="text-yellow-500 focus:ring-yellow-500">
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
                   <div class="font-semibold text-emerald-400 text-sm">Emerald Tier</div>
@@ -274,19 +280,19 @@
 
             <!-- Tier 4 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier4" class="text-yellow-500 focus:ring-yellow-500" onchange="updateTierPreview(4)">
+              <input type="radio" name="deposit-tier" value="tier4" class="text-yellow-500 focus:ring-yellow-500">
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
-                  <div class="font-semibold text-rose-400 text-sm">Ruby Tier</div>
+                  <div class="font-semibold text-slate-300 text-sm">Platinum Tier</div>
                   <div class="text-xs text-slate-400">$100,000 – $500,000</div>
                 </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-950 text-rose-300 border border-rose-800">Ruby</span>
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-200 border border-slate-600">Platinum</span>
               </div>
             </label>
 
             <!-- Tier 5 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier5" class="text-yellow-500 focus:ring-yellow-500" onchange="updateTierPreview(5)">
+              <input type="radio" name="deposit-tier" value="tier5" class="text-yellow-500 focus:ring-yellow-500">
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
                   <div class="font-semibold text-amber-400 text-sm">Gold Tier</div>
@@ -298,7 +304,7 @@
 
             <!-- Tier 6 -->
             <label class="flex items-center p-3 rounded-xl glass-panel border border-slate-800 hover:border-yellow-500/50 cursor-pointer transition">
-              <input type="radio" name="deposit-tier" value="tier6" class="text-yellow-500 focus:ring-yellow-500" onchange="updateTierPreview(6)">
+              <input type="radio" name="deposit-tier" value="tier6" class="text-yellow-500 focus:ring-yellow-500">
               <div class="ml-3 flex-1 flex items-center justify-between">
                 <div>
                   <div class="font-semibold text-yellow-300 text-sm">Black Gold Tier</div>
@@ -325,7 +331,7 @@
             <h2 class="text-lg font-semibold text-white border-b border-slate-800 pb-2 flex items-center justify-center gap-2">
               <i class="fa-solid fa-lock text-yellow-500"></i> Set Your 4-Digit Security PIN
             </h2>
-            <p class="text-xs text-slate-400 mt-2">This PIN will be required to authorize transfers and view sensitive card details.</p>
+            <p class="text-xs text-slate-400 mt-2">This PIN is required to authorize transfers and view sensitive card details.</p>
           </div>
 
           <!-- PIN Display Boxes -->
@@ -357,7 +363,7 @@
               <i class="fa-solid fa-arrow-left mr-2"></i> Back
             </button>
             <button type="button" id="btn-complete-reg" onclick="completeRegistration()" disabled class="px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-semibold rounded-xl opacity-50 cursor-not-allowed transition shadow-lg shadow-amber-500/20 flex items-center gap-2">
-              Complete Login <i class="fa-solid fa-vault"></i>
+              Complete Account <i class="fa-solid fa-vault"></i>
             </button>
           </div>
         </div>
@@ -391,7 +397,7 @@
             <i class="fa-solid fa-chart-pie"></i> Dashboard
           </button>
           <button onclick="switchTab('cards')" id="tab-btn-cards" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
-            <i class="fa-solid fa-credit-card"></i> Virtual Payment
+            <i class="fa-solid fa-credit-card"></i> Virtual Payment Cards
           </button>
           <button onclick="switchTab('transactions')" id="tab-btn-transactions" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
             <i class="fa-solid fa-receipt"></i> Transactions
@@ -415,7 +421,7 @@
       <!-- Mobile Sub-nav -->
       <div class="md:hidden flex border-t border-slate-800 overflow-x-auto">
         <button onclick="switchTab('dashboard')" id="mobile-tab-btn-dashboard" class="flex-1 py-3 text-xs font-semibold text-center text-amber-400 bg-slate-900 border-b-2 border-amber-400">Dashboard</button>
-        <button onclick="switchTab('cards')" id="mobile-tab-btn-cards" class="flex-1 py-3 text-xs font-semibold text-center text-slate-400">Virtual Cards</button>
+        <button onclick="switchTab('cards')" id="mobile-tab-btn-cards" class="flex-1 py-3 text-xs font-semibold text-center text-slate-400">Cards</button>
         <button onclick="switchTab('transactions')" id="mobile-tab-btn-transactions" class="flex-1 py-3 text-xs font-semibold text-center text-slate-400">Transactions</button>
         <button onclick="switchTab('settings')" id="mobile-tab-btn-settings" class="flex-1 py-3 text-xs font-semibold text-center text-slate-400">Settings</button>
       </div>
@@ -448,9 +454,12 @@
                   <button onclick="toggleBalanceVisibility()" id="btn-toggle-bal" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-eye"></i></button>
                 </div>
               </div>
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3 flex-wrap">
                 <button onclick="openDepositModal()" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
                   <i class="fa-solid fa-plus"></i> Deposit
+                </button>
+                <button onclick="openWithdrawModal()" class="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-amber-600/20 flex items-center gap-2">
+                  <i class="fa-solid fa-arrow-down"></i> Withdraw
                 </button>
                 <button onclick="openTransferModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-sm transition border border-slate-700 flex items-center gap-2">
                   <i class="fa-solid fa-paper-plane"></i> Transfer
@@ -607,7 +616,7 @@
             <h2 class="text-xl font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-receipt text-yellow-500"></i> Transaction History
             </h2>
-            <p class="text-xs text-slate-400 mt-1">Complete ledger of all account deposits, transfers, and virtual card payments.</p>
+            <p class="text-xs text-slate-400 mt-1">Complete ledger of all account deposits, withdrawals, transfers, and virtual card payments.</p>
           </div>
           <div class="flex items-center gap-3 w-full sm:w-auto">
             <input type="text" id="tx-search" oninput="filterTransactions()" placeholder="Search transactions..." class="glass-input px-4 py-2.5 rounded-xl text-sm w-full sm:w-64">
@@ -825,8 +834,8 @@
           minBal = 50000; maxBal = 100000;
           break;
         case 'tier4':
-          tierName = "Ruby Tier";
-          tierClass = "card-ruby";
+          tierName = "Platinum Tier";
+          tierClass = "card-platinum";
           minBal = 100000; maxBal = 500000;
           break;
         case 'tier5':
@@ -1038,7 +1047,7 @@
             <div class="flex items-center justify-between z-10">
               <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-950/60 text-amber-300 border border-yellow-500/40 uppercase tracking-wider">${card.tierName}</span>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-mono text-slate-300">${card.frozen ? '<span class="text-red-400"><i class="fa-solid fa-snowflake"></i> Frozen</span>' : '<span class="text-emerald-400"><i class="fa-solid fa-circle-check"><i> Active</span>'}</span>
+                <span class="text-xs font-mono text-slate-300">${card.frozen ? '<span class="text-red-400"><i class="fa-solid fa-snowflake"></i> Frozen</span>' : '<span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Active</span>'}</span>
                 <i class="fa-brands fa-cc-visa text-2xl text-white"></i>
               </div>
             </div>
@@ -1180,7 +1189,7 @@
       showToast(`Payment of $${amount.toFixed(2)} authorized successfully!`, 'success');
     }
 
-    // Deposit & Transfer Modals
+    // Deposit, Withdraw & Transfer Modals
     function openDepositModal() {
       openModal(`
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-plus text-emerald-400"></i> Deposit Funds</h3>
@@ -1218,6 +1227,60 @@
       renderSpendingChart();
       closeModal();
       showToast(`Successfully deposited $${amt.toLocaleString()}`, 'success');
+    }
+
+    function openWithdrawModal() {
+      openModal(`
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-arrow-down text-amber-400"></i> Withdraw Funds</h3>
+        <p class="text-xs text-slate-400 mb-4">Withdraw funds securely from your account.</p>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Withdraw Amount ($)</label>
+            <input type="number" id="modal-withdraw-amt" class="glass-input w-full px-4 py-3 rounded-xl text-sm" placeholder="5000">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Security PIN (4 Digits)</label>
+            <input type="password" id="modal-withdraw-pin" maxlength="4" class="glass-input w-full px-4 py-3 rounded-xl text-sm font-mono" placeholder="••••">
+          </div>
+          <button onclick="confirmWithdraw()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-amber-600/20">
+            Confirm Withdrawal
+          </button>
+        </div>
+      `);
+    }
+
+    function confirmWithdraw() {
+      const amt = parseFloat(document.getElementById('modal-withdraw-amt').value);
+      const pin = document.getElementById('modal-withdraw-pin').value;
+
+      if (!amt || amt <= 0) {
+        showToast('Please enter a valid withdrawal amount.', 'error');
+        return;
+      }
+      if (pin !== currentUser.pin) {
+        showToast('Invalid Security PIN.', 'error');
+        return;
+      }
+      if (currentUser.balance < amt) {
+        showToast('Insufficient funds for withdrawal.', 'error');
+        return;
+      }
+
+      currentUser.balance -= amt;
+      currentUser.transactions.unshift({
+        id: "TXN-" + Math.floor(100000 + Math.random() * 900000),
+        desc: "ATM / Vault Cash Withdrawal",
+        category: "Withdrawal",
+        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        amount: amt,
+        type: "debit"
+      });
+      localStorage.setItem('shacklebolt_user', JSON.stringify(currentUser));
+      updateBalanceDisplay();
+      renderTransactions();
+      renderSpendingChart();
+      closeModal();
+      showToast(`Successfully withdrew $${amt.toLocaleString()}`, 'success');
     }
 
     function openTransferModal() {
@@ -1355,7 +1418,7 @@
       }
 
       // Calculate categories from transactions
-      let cats = { 'Travel': 0, 'Shopping': 0, 'Deposit': 0, 'Transfer': 0 };
+      let cats = { 'Travel': 0, 'Shopping': 0, 'Deposit': 0, 'Transfer': 0, 'Withdrawal': 0 };
       currentUser.transactions.forEach(tx => {
         if (tx.type === 'debit') {
           cats[tx.category] = (cats[tx.category] || 0) + tx.amount;
@@ -1365,10 +1428,10 @@
       spendingChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Travel', 'Shopping', 'Transfer'],
+          labels: ['Travel', 'Shopping', 'Transfer', 'Withdrawal'],
           datasets: [{
-            data: [cats['Travel'] || 1250, cats['Shopping'] || 0, cats['Transfer'] || 0],
-            backgroundColor: ['#eab308', '#3b82f6', '#10b981'],
+            data: [cats['Travel'] || 1250, cats['Shopping'] || 0, cats['Transfer'] || 0, cats['Withdrawal'] || 0],
+            backgroundColor: ['#eab308', '#3b82f6', '#10b981', '#f59e0b'],
             borderWidth: 0,
             hoverOffset: 4
           }]
