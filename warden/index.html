@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WARDEN 4.7 — Facility Control</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="boot" class="boot"><div><span>WARDEN 4.7</span><p>INITIALIZING FACILITY CONTROL SYSTEM...</p><b>SECURE CHANNEL ESTABLISHED</b></div></div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><div class="core"></div><div><strong>WARDEN <em>4.7</em></strong><small>FACILITY CONTROL</small></div></div>
+    <div class="clearance"><span>CLEARANCE</span><b>LEVEL 07</b><i>AUTHORIZED</i></div>
+    <nav>
+      <button class="nav active" data-page="command">⌁ <span>COMMAND</span></button>
+      <button class="nav" data-page="security">▣ <span>SECURITY</span></button>
+      <button class="nav" data-page="hypersuits">◈ <span>HYPERSUIT LAB</span></button>
+      <button class="nav" data-page="projects">◇ <span>PROJECTS</span></button>
+      <button class="nav" data-page="facility">⌖ <span>FACILITY</span></button>
+      <button class="nav" data-page="personnel">◉ <span>PERSONNEL</span></button>
+      <button class="nav" data-page="lowerdeck">◇ <span>THE LOWER DECK</span></button>
+    </nav>
+    <div class="side-bottom">
+      <div><span>SYSTEM</span><b class="green">NOMINAL</b></div>
+      <div><span>AI CORE</span><b class="cyan">ONLINE</b></div>
+      <div><span>UPTIME</span><b>184D 07H</b></div>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div>
+        <div class="crumb">WARDEN / FACILITY CONTROL / <span id="pageName">COMMAND</span></div>
+        <h1 id="title">COMMAND CENTER</h1>
+      </div>
+      <div class="top-right">
+        <div><span class="dot"></span> SECURE LINK</div>
+        <time id="clock"></time>
+      </div>
+    </header>
+
+    <section id="command" class="page active">
+      <div class="hero panel">
+        <div class="hero-copy">
+          <span class="tag">FACILITY STATUS // LIVE</span>
+          <h2>GOOD EVENING,<br><strong>COMMANDER.</strong></h2>
+          <p>All primary systems are operating within expected parameters. No active facility-wide threats detected.</p>
+          <div class="actions">
+            <button class="primary" id="alertBtn">RUN FACILITY SCAN</button>
+            <button id="lockBtn">SECURITY LOCKDOWN</button>
+          </div>
+        </div>
+        <div class="reactor">
+          <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+          <div class="reactor-core">W</div>
+          <small>WARDEN CORE</small>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric panel live-metric"><span>FACILITY INTEGRITY</span><b id="integrity">98.7%</b><i><u id="integrityBar" style="width:98.7%"></u></i><small id="integrityState">NOMINAL</small></div>
+        <div class="metric panel live-metric"><span>POWER RESERVE</span><b id="power">91%</b><i><u id="powerBar" style="width:91%"></u></i><small id="powerState">12.4 DAYS</small></div>
+        <div class="metric panel live-metric"><span>ACTIVE PERSONNEL</span><b id="personnelCount">247</b><i><u id="personnelBar" style="width:72%"></u></i><small>342 CLEARED</small></div>
+        <div class="metric panel live-metric"><span>HYPERSUIT READINESS</span><b id="readiness">84%</b><i><u id="readinessBar" style="width:84%"></u></i><small id="suitState">3 IN TESTING</small></div>
+      </div>
+
+      <div class="telemetry panel">
+        <div class="panel-title">LIVE TELEMETRY <b class="cyan">● STREAMING</b></div>
+        <div class="telemetry-grid">
+          <div><span>CORE TEMP</span><b id="coreTemp">38.4°C</b></div>
+          <div><span>GRID LOAD</span><b id="gridLoad">64%</b></div>
+          <div><span>NETWORK</span><b id="network">12ms</b></div>
+          <div><span>DRONE FLEET</span><b id="drones">18 / 20</b></div>
+          <div><span>AIR QUALITY</span><b id="air">98%</b></div>
+          <div><span>SECURITY EVENTS</span><b id="events">03</b></div>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="panel feed"><div class="panel-title">LIVE ACTIVITY <b>● LIVE</b></div>
+          <div id="feed">
+            <p><time>18:21:04</time><span class="green">SYSTEM</span> Perimeter sweep completed — no anomalies.</p>
+            <p><time>18:19:32</time><span class="cyan">LAB-03</span> HYPER-07 entered thermal calibration.</p>
+            <p><time>18:17:08</time><span>SECURITY</span> Personnel checkpoint Delta cleared.</p>
+            <p><time>18:14:51</time><span class="red">NOTICE</span> Drone maintenance scheduled for 19:00.</p>
+          </div>
+        </div>
+        <div class="panel threat"><div class="panel-title">THREAT MATRIX</div><div class="threat-ring"><b>LOW</b><small>GLOBAL THREAT</small></div><div class="threat-bars"><span>PERIMETER <i><u style="width:18%"></u></i></span><span>INTERNAL <i><u style="width:7%"></u></i></span><span>CYBER <i><u style="width:11%"></u></i></span></div></div>
+        <div class="panel quick"><div class="panel-title">QUICK ACCESS</div><button data-page="hypersuits">HYPERSUIT INVENTORY <b>→</b></button><button data-page="facility">FACILITY MAP <b>→</b></button><button data-page="lowerdeck">LOWER DECK <b>→</b></button><button id="emergency">EMERGENCY PROTOCOL <b>!</b></button></div>
+      </div>
+    </section>
+
+    <section id="security" class="page">
+  <div class="section-head"><div><span class="tag">SECURITY NETWORK // 12 CHECKPOINTS</span><h2>SECURITY CONTROL</h2></div><div class="badge green" id="securityState">ALL SECTORS STABLE</div></div>
+  <div class="security-grid">
+    <div class="panel doors"><div class="panel-title">ACCESS POINTS <b id="checkpointCount">12 ONLINE</b></div>
+      <div id="checkpoints">
+        <div class="door"><span><b>CP-01 // NORTH GATE</b><small>VEHICLE ENTRANCE</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-02 // PERSONNEL</b><small>MAIN STAFF ENTRANCE</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-03 // RESEARCH</b><small>R&D WING</small></span><button class="toggle">LOCKED</button></div>
+        <div class="door"><span><b>CP-04 // HANGAR</b><small>HYPERSUIT ACCESS</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-05 // REACTOR</b><small>POWER CORE ACCESS</small></span><button class="toggle">LOCKED</button></div>
+        <div class="door"><span><b>CP-06 // ARMORY</b><small>CONTROLLED STORAGE</small></span><button class="toggle">LOCKED</button></div>
+        <div class="door"><span><b>CP-07 // COMMAND</b><small>LEVEL 07 ACCESS</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-08 // VAULT</b><small>BLACK-LEVEL STORAGE</small></span><button class="toggle">LOCKED</button></div>
+        <div class="door"><span><b>CP-09 // LOWER DECK</b><small>PERSONNEL RECREATION</small></span><button class="toggle on">OPEN</button></div>
+        <div class="door"><span><b>CP-10 // SUBLEVEL</b><small>TRANSIT TUNNEL</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-11 // EMERGENCY</b><small>EMERGENCY EXIT</small></span><button class="toggle on">SECURED</button></div>
+        <div class="door"><span><b>CP-12 // AIRLOCK</b><small>EXTERNAL ACCESS</small></span><button class="toggle">LOCKED</button></div>
+      </div>
+    </div>
+    <div class="panel camera"><div class="panel-title">PERIMETER FEED <b class="green">● LIVE</b></div><div class="camera-screen"><span id="cameraName">CAM 07 // NORTH PERIMETER</span><strong id="cameraStatus">NO INTRUSION DETECTED</strong><i></i></div></div>
+  </div>
+</section>
+
+    <section id="hypersuits" class="page">
+      <div class="section-head"><div><span class="tag">ADVANCED R&D</span><h2>HYPERSUIT LAB</h2></div><div class="badge cyan">3 ACTIVE TESTS</div></div>
+      <div class="suits">
+        <div class="suit panel"><div class="suit-id">HYPER-01</div><div class="suit-art">01</div><h3>AEGIS</h3><p>Defensive exosuit platform.</p><div class="suit-stats"><span>CORE <b>96%</b></span><span>ARMOR <b>91%</b></span><span>FLIGHT <b>78%</b></span></div><button class="inspect">OPEN DOSSIER</button></div>
+        <div class="suit panel"><div class="suit-id">HYPER-07</div><div class="suit-art hot">07</div><h3>VANGUARD</h3><p>High-mobility combat platform.</p><div class="suit-stats"><span>CORE <b>82%</b></span><span>ARMOR <b>74%</b></span><span>FLIGHT <b>98%</b></span></div><button class="inspect">OPEN DOSSIER</button></div>
+        <div class="suit panel"><div class="suit-id">HYPER-X</div><div class="suit-art red">X</div><h3>PROJECT X</h3><p>Experimental. Clearance required.</p><div class="suit-stats"><span>CORE <b>?</b></span><span>ARMOR <b>?</b></span><span>FLIGHT <b>?</b></span></div><button class="inspect">REQUEST ACCESS</button></div>
+      </div>
+    </section>
+
+
+    <section id="projects" class="page">
+      <div class="section-head">
+        <div><span class="tag">CLASSIFIED R&D PROGRAMS</span><h2>PROJECT REGISTRY</h2></div>
+        <div class="badge red">CLEARANCE 07 REQUIRED</div>
+      </div>
+      <div class="projects">
+        <div class="project panel active-project">
+          <div class="project-code">PROJECT // NS-01</div>
+          <div class="project-icon nightshade">N</div>
+          <h3>NIGHTSHADE</h3>
+          <p>Low-observable mobility and adaptive concealment platform.</p>
+          <div class="project-status"><span>STATUS</span><b>ACTIVE DEVELOPMENT</b></div>
+          <div class="project-meter"><i><u style="width:67%"></u></i><b>67%</b></div>
+          <button class="project-btn">OPEN PROJECT</button>
+        </div>
+        <div class="project panel">
+          <div class="project-code">PROJECT // A-12</div>
+          <div class="project-icon">A</div>
+          <h3>AEGIS GRID</h3>
+          <p>Distributed facility defense and autonomous interception network.</p>
+          <div class="project-status"><span>STATUS</span><b>FIELD TESTING</b></div>
+          <div class="project-meter"><i><u style="width:82%"></u></i><b>82%</b></div>
+          <button class="project-btn">OPEN PROJECT</button>
+        </div>
+        <div class="project panel">
+          <div class="project-code">PROJECT // OR-09</div>
+          <div class="project-icon">O</div>
+          <h3>ORBITAL</h3>
+          <p>High-altitude reconnaissance and long-range sensor platform.</p>
+          <div class="project-status"><span>STATUS</span><b>PROTOTYPE</b></div>
+          <div class="project-meter"><i><u style="width:43%"></u></i><b>43%</b></div>
+          <button class="project-btn">OPEN PROJECT</button>
+        </div>
+        <div class="project panel">
+          <div class="project-code">PROJECT // MN-03</div>
+          <div class="project-icon">M</div>
+          <h3>MNEMOSYNE</h3>
+          <p>Experimental neural-interface research and synthetic memory systems.</p>
+          <div class="project-status"><span>STATUS</span><b>RESTRICTED</b></div>
+          <div class="project-meter"><i><u style="width:29%"></u></i><b>29%</b></div>
+          <button class="project-btn">REQUEST ACCESS</button>
+        </div>
+      </div>
+      <div class="panel project-log">
+        <div class="panel-title">PROJECT ACTIVITY <b class="cyan">● LIVE</b></div>
+        <div id="projectActivity">
+          <p><time>18:24:12</time><b class="cyan">NIGHTSHADE</b> Adaptive surface test entered phase 4.</p>
+          <p><time>18:22:47</time><b class="green">AEGIS GRID</b> Perimeter node synchronization complete.</p>
+          <p><time>18:20:31</time><b>ORBITAL</b> Sensor calibration window opened.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="facility" class="page">
+      <div class="section-head"><div><span class="tag">SECTOR OVERVIEW</span><h2>FACILITY MAP</h2></div><div class="badge green">42 SYSTEMS ONLINE</div></div>
+      <div class="panel map"><div class="map-grid"></div><div class="map-label l1">COMMAND</div><div class="map-label l2">HYPERSUIT LAB</div><div class="map-label l3">R&D</div><div class="map-label l4">VAULT</div><div class="map-label l5">LOWER DECK</div><div class="map-core">WARDEN<br><small>CORE</small></div><div class="route"></div></div>
+    </section>
+
+    
+    <section id="personnel" class="page">
+      <div class="section-head">
+        <div><span class="tag">WORKFORCE NETWORK // MAX CAPACITY 130</span><h2>PERSONNEL & TEAMS</h2></div>
+        <div class="badge green">CURRENT STAFF <b id="staffTotal">118</b> / 130</div>
+      </div>
+
+      <div class="worker-metrics">
+        <div class="panel worker-metric"><span>CURRENT SHIFT</span><b id="shiftHours">293,489</b><small>HOURS LOGGED</small></div>
+        <div class="panel worker-metric"><span>PERSONNEL ONLINE</span><b id="staffOnline">86</b><small class="green">ACTIVE ON SITE</small></div>
+        <div class="panel worker-metric"><span>PERSONNEL OFFLINE</span><b id="staffOffline">32</b><small>OFF DUTY / REMOTE</small></div>
+        <div class="panel worker-metric"><span>SHIFT COVERAGE</span><b id="coverage">73%</b><small>NOMINAL</small></div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // SEC-01</span><b class="green">SECURITY</b></div>
+          <div class="team-number"><strong id="secOnline">19</strong><span>ONLINE</span><strong id="secOffline">5</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="secTotal">24</b></div>
+          <div class="team-bar"><i id="secBar" style="width:79%"></i></div>
+          <p>Perimeter, access control, response and surveillance.</p>
+        </div>
+
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // MNT-02</span><b class="cyan">MAINTENANCE</b></div>
+          <div class="team-number"><strong id="mntOnline">11</strong><span>ONLINE</span><strong id="mntOffline">7</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="mntTotal">18</b></div>
+          <div class="team-bar"><i id="mntBar" style="width:61%"></i></div>
+          <p>Power, mechanical systems, drones and structural systems.</p>
+        </div>
+
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // RND-03</span><b>RESEARCH</b></div>
+          <div class="team-number"><strong id="rndOnline">28</strong><span>ONLINE</span><strong id="rndOffline">8</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="rndTotal">36</b></div>
+          <div class="team-bar"><i id="rndBar" style="width:78%"></i></div>
+          <p>Advanced technology research and prototype development.</p>
+        </div>
+
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // MED-04</span><b class="red">MEDICAL</b></div>
+          <div class="team-number"><strong id="medOnline">9</strong><span>ONLINE</span><strong id="medOffline">4</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="medTotal">13</b></div>
+          <div class="team-bar"><i id="medBar" style="width:69%"></i></div>
+          <p>Trauma, recovery, suit physiology and occupational safety.</p>
+        </div>
+
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // LOG-05</span><b>LOGISTICS</b></div>
+          <div class="team-number"><strong id="logOnline">7</strong><span>ONLINE</span><strong id="logOffline">5</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="logTotal">12</b></div>
+          <div class="team-bar"><i id="logBar" style="width:58%"></i></div>
+          <p>Supplies, transport, inventory and facility operations.</p>
+        </div>
+
+        <div class="team panel">
+          <div class="team-top"><span>TEAM // AIN-06</span><b class="cyan">AI & NETWORKS</b></div>
+          <div class="team-number"><strong id="ainOnline">12</strong><span>ONLINE</span><strong id="ainOffline">3</strong><span>OFFLINE</span></div>
+          <div class="team-total">TOTAL STAFF <b id="ainTotal">15</b></div>
+          <div class="team-bar"><i id="ainBar" style="width:80%"></i></div>
+          <p>WARDEN core, cybersecurity, communications and network infrastructure.</p>
+        </div>
+      </div>
+
+      <div class="research panel">
+        <div class="panel-title">RESEARCH DIVISIONS <b class="cyan">36 RESEARCHERS</b></div>
+        <div class="research-grid">
+          <div><b>EXOSYSTEMS</b><span>Hypersuits, armor & mobility</span><strong id="resExo">12</strong></div>
+          <div><b>ENERGY SYSTEMS</b><span>Power cores & storage</span><strong id="resEnergy">7</strong></div>
+          <div><b>NEURAL INTERFACES</b><span>Cognition & synthetic memory</span><strong id="resNeural">6</strong></div>
+          <div><b>MATERIAL SCIENCE</b><span>Adaptive & composite materials</span><strong id="resMaterial">5</strong></div>
+          <div><b>AEROSPACE</b><span>Flight & high-altitude systems</span><strong id="resAero">4</strong></div>
+          <div><b>FIELD SYSTEMS</b><span>Sensors & autonomous platforms</span><strong id="resField">2</strong></div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="lowerdeck" class="page">
+      <div class="section-head"><div><span class="tag">PERSONNEL RECREATION</span><h2>THE LOWER DECK</h2></div><div class="badge">OPEN // 18:20</div></div>
+      <div class="bar panel"><div class="neon">LOWER<br><strong>DECK</strong></div><div class="bar-info"><p>OFF-DUTY PERSONNEL ONLY</p><h3>THE FACILITY'S WORST KEPT SECRET.</h3><span>Music · Drinks · Cards · Extremely questionable engineering debates</span><button id="barBtn">CHECK IN</button></div><div class="bar-stats"><b>37</b><small>PERSONNEL INSIDE</small><b>02:14</b><small>AVG. STAY</small></div></div>
+    </section>
+
+    <footer><span>WARDEN 4.7 // CLASSIFIED FACILITY NETWORK</span><span>LOCAL INSTANCE // ENCRYPTION ACTIVE</span></footer>
+  </main>
+</div>
+
+<div id="toast"></div>
+<script>
+const pages=[...document.querySelectorAll('.page')],navs=[...document.querySelectorAll('.nav')];
+function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));navs.forEach(n=>n.classList.toggle('active',n.dataset.page===id));const names={command:'COMMAND',security:'SECURITY',hypersuits:'HYPERSUIT LAB',projects:'PROJECTS',facility:'FACILITY',personnel:'PERSONNEL',lowerdeck:'THE LOWER DECK'};document.getElementById('pageName').textContent=names[id];document.getElementById('title').textContent=names[id]==='COMMAND'?'COMMAND CENTER':names[id]}
+document.querySelectorAll('[data-page]').forEach(x=>x.addEventListener('click',()=>showPage(x.dataset.page)));
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleString('en-SG',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' SGT'}setInterval(tick,1000);tick();
+
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+let telemetry={integrity:98.7,power:91,personnel:247,readiness:84,temp:38.4,load:64,latency:12,drones:18,air:98,events:3};
+
+function fluctuate(){
+ telemetry.integrity=clamp(telemetry.integrity+(Math.random()-.5)*.35,97.8,99.2);
+ telemetry.power=clamp(telemetry.power+(Math.random()-.5)*.16,89,92);
+ telemetry.personnel=clamp(Math.round(telemetry.personnel+(Math.random()>.5?1:-1)),239,256);
+ telemetry.readiness=clamp(telemetry.readiness+(Math.random()-.5)*1.4,80,88);
+ telemetry.temp=clamp(telemetry.temp+(Math.random()-.5)*.7,35.5,42);
+ telemetry.load=clamp(Math.round(telemetry.load+(Math.random()-.5)*4),48,79);
+ telemetry.latency=clamp(Math.round(telemetry.latency+(Math.random()-.5)*6),7,27);
+ telemetry.drones=clamp(telemetry.drones+(Math.random()>.86?(Math.random()>.5?1:-1):0),16,20);
+ telemetry.air=clamp(Math.round(telemetry.air+(Math.random()-.5)*.8),94,100);
+ if(Math.random()>.93) telemetry.events=(telemetry.events+1)%10;
+
+ const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+ const bar=(id,val)=>{const e=document.getElementById(id);if(e)e.style.width=val+'%'};
+ set('integrity',telemetry.integrity.toFixed(1)+'%');bar('integrityBar',telemetry.integrity);
+ set('power',Math.round(telemetry.power)+'%');bar('powerBar',telemetry.power);
+ set('personnelCount',telemetry.personnel);bar('personnelBar',telemetry.personnel/342*100);
+ set('readiness',Math.round(telemetry.readiness)+'%');bar('readinessBar',telemetry.readiness);
+ set('coreTemp',telemetry.temp.toFixed(1)+'°C');set('gridLoad',telemetry.load+'%');set('network',telemetry.latency+'ms');set('drones',telemetry.drones+' / 20');set('air',telemetry.air+'%');set('events',String(telemetry.events).padStart(2,'0'));
+ document.getElementById('integrityState').textContent=telemetry.integrity<98.1?'MONITORING':'NOMINAL';
+ document.getElementById('powerState').textContent=(telemetry.power/7.3).toFixed(1)+' DAYS';
+ document.getElementById('suitState').textContent=telemetry.readiness<82?'2 IN TESTING':'3 IN TESTING';
+}
+setInterval(fluctuate,1800);fluctuate();
+
+const teams={
+ sec:{on:19,total:24},mnt:{on:11,total:18},rnd:{on:28,total:36},med:{on:9,total:13},log:{on:7,total:12},ain:{on:12,total:15}
+};
+function updateWorkforce(){
+  let online=0,total=0;
+  Object.entries(teams).forEach(([k,t])=>{
+    t.on=clamp(t.on+(Math.random()>.52?1:-1),Math.max(1,t.total-9),t.total);
+    online+=t.on;total+=t.total;
+    document.getElementById(k+'Online').textContent=t.on;
+    document.getElementById(k+'Offline').textContent=t.total-t.on;
+    document.getElementById(k+'Total').textContent=t.total;
+    document.getElementById(k+'Bar').style.width=(t.on/t.total*100)+'%';
+  });
+  document.getElementById('staffOnline').textContent=online;
+  document.getElementById('staffOffline').textContent=total-online;
+  document.getElementById('staffTotal').textContent=total;
+  document.getElementById('coverage').textContent=Math.round(online/total*100)+'%';
+}
+setInterval(updateWorkforce,5000);updateWorkforce();
+
+let shiftBase=293489;
+setInterval(()=>{
+  shiftBase+=Math.random()>.55?1:0;
+  document.getElementById('shiftHours').textContent=shiftBase.toLocaleString();
+},30000);
+
+
+let feedCounter=0;
+const feedMessages=[
+ ['SYSTEM','Perimeter sweep completed — no anomalies.','green'],
+ ['LAB-03','HYPER-07 entered thermal calibration.','cyan'],
+ ['SECURITY','Personnel checkpoint Delta cleared.',''],
+ ['NOTICE','Drone maintenance scheduled for 19:00.','red'],
+ ['CP-04','Hypersuit hangar access verified.','cyan'],
+ ['WARDEN AI','Background threat analysis refreshed.','green']
+];
+setInterval(()=>{
+ const f=document.getElementById('feed'),m=feedMessages[feedCounter++%feedMessages.length];
+ const p=document.createElement('p');const now=new Date().toLocaleTimeString('en-GB');p.innerHTML='<time>'+now+'</time><span class="'+m[2]+'">'+m[0]+'</span>'+m[1];f.prepend(p);if(f.children.length>5)f.lastElementChild.remove();
+},4200);
+
+document.getElementById('alertBtn').onclick=()=>{toast('FACILITY SCAN COMPLETE — ALL 12 CHECKPOINTS RESPONDING')};
+let locked=false;
+document.getElementById('lockBtn').onclick=()=>{locked=!locked;document.getElementById('lockBtn').textContent=locked?'RELEASE LOCKDOWN':'SECURITY LOCKDOWN';document.body.classList.toggle('lockdown',locked);toast(locked?'⚠ FACILITY LOCKDOWN ENGAGED':'LOCKDOWN RELEASED — ALL CLEAR')};
+document.getElementById('emergency').onclick=()=>{document.getElementById('lockBtn').click();showPage('security')};
+
+document.querySelectorAll('.toggle').forEach(b=>b.onclick=()=>{
+ b.classList.toggle('on');b.textContent=b.classList.contains('on')?(b.textContent==='OPEN'?'OPEN':'SECURED'):'LOCKED';
+ const label=b.previousElementSibling.querySelector('b').textContent;
+ toast(label+' // '+b.textContent);
+});
+document.querySelectorAll('.inspect').forEach(b=>b.onclick=()=>toast(b.textContent==='REQUEST ACCESS'?'ACCESS REQUEST SENT TO LEVEL 07 COMMAND':'DOSSIER LOADED — SIMULATION MODE'));
+document.querySelectorAll('.project-btn').forEach(b=>b.onclick=()=>toast(b.textContent==='REQUEST ACCESS'?'ACCESS REQUEST SENT TO LEVEL 07 COMMAND':'PROJECT DOSSIER OPENED — SIMULATION MODE'));
+
+document.getElementById('barBtn').onclick=()=>toast('CHECK-IN ACCEPTED — 38 PERSONNEL CURRENTLY INSIDE');
+
+const cams=['CAM 07 // NORTH PERIMETER','CAM 02 // EAST GATE','CAM 14 // HANGAR APPROACH','CAM 19 // SUBLEVEL'];
+const camStatus=['NO INTRUSION DETECTED','VEHICLE APPROACH — CLEARED','MAINTENANCE CREW DETECTED','TRANSIT CORRIDOR CLEAR'];
+setInterval(()=>{const i=Math.floor(Math.random()*cams.length);document.getElementById('cameraName').textContent=cams[i];document.getElementById('cameraStatus').textContent=camStatus[i]},6500);
+
+setTimeout(()=>document.getElementById('boot').classList.add('hide'),1100);
+</script>
+</body>
+</html>
