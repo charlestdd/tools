@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domi Dashboard // Secure Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="core"></div>
+                <div>
+                    <strong>AIM2<em>API</em></strong>
+                    <small>SECURE TERMINAL</small>
+                </div>
+            </div>
+            
+            <div class="clearance">
+                <span>USER IDENT</span>
+                <b>DOMI</b>
+                <i>ONLINE // SECURE</i>
+            </div>
+
+            <div style="margin-top: 15px; display: grid; gap: 4px;">
+                <button class="nav active"><span>01</span> OVERVIEW</button>
+                <button class="nav"><span>02</span> SECURITY</button>
+                <button class="nav"><span>03</span> SEARCH</button>
+            </div>
+
+            <div class="side-bottom">
+                <div><span>SYSTEM VERSION</span> <b>1.0.2</b></div>
+                <div><span>LINK STATUS</span> <b class="green">ACTIVE</b></div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard View -->
+        <main>
+            <header>
+                <div>
+                    <div class="crumb">ROOT / <span>AIM2</span></div>
+                    <h1>WELCOME, DOMI</h1>
+                </div>
+                <div class="top-right">
+                    <div style="font-size: 8px; color: var(--cyan); letter-spacing: 1px; margin-bottom: 2px;">ON STANDBY</div>
+                    <div><span class="dot"></span>SYSTEM OPERATIONAL</div>
+                    <time id="live-sgt">SGT: --:--:--</time>
+                </div>
+            </header>
+
+            <!-- Multi-Timezone & Geolocation Panel -->
+            <div class="panel metrics">
+                <div class="metric">
+                    <span>GEO-LOCATION</span>
+                    <b id="geo-location" style="font-size: 14px;">ACQUIRING...</b>
+                    <small>COORDINATES</small>
+                </div>
+                <div class="metric">
+                    <span>SGT (SINGAPORE)</span>
+                    <b id="time-sgt">--:--:--</b>
+                    <small>UTC +8</small>
+                </div>
+                <div class="metric">
+                    <span>UTC TIME</span>
+                    <b id="time-utc">--:--:--</b>
+                    <small>COORDINATED UNIVERSAL</small>
+                </div>
+                <div class="metric">
+                    <span>WYOMING TIME (MST/MDT)</span>
+                    <b id="time-wyoming">--:--:--</b>
+                    <small>AMERICA/DENVER</small>
+                </div>
+            </div>
+
+            <!-- Focus / "Locking in" Timer Panel -->
+            <div style="margin-top: 15px;" class="panel">
+                <div class="panel-title">
+                    <span>PRODUCTIVITY PROTOCOL // FOCUS TIMER</span>
+                    <span class="cyan">STANDBY_MODE</span>
+                </div>
+                <div style="padding: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                    <div>
+                        <span style="font: 8px Orbitron; color: var(--muted); letter-spacing: 1px;">SESSION STATUS</span>
+                        <h3 id="timer-display" style="font-size: 32px; font-family: Orbitron; margin: 4px 0; color: var(--cyan);">00:00:00</h3>
+                        <p style="color: var(--muted); font-size: 13px; margin: 0;">Targeted focus session tracker</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="lock-in-btn" class="primary" style="font: 8px Orbitron;" onclick="toggleTimer()">LOCKING IN</button>
+                        <button style="font: 8px Orbitron;" onclick="resetTimer()">RESET</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spotify API Integration Section -->
+            <div style="margin-top: 15px;" class="panel">
+                <div class="panel-title">
+                    <span>LIVE MEDIA STREAM // SPOTIFY OAUTH API</span>
+                    <span class="cyan" id="spotify-auth-status">DISCONNECTED</span>
+                </div>
+                <div style="padding: 24px; display: flex; align-items: center; gap: 20px;">
+                    <div id="spotify-art-container" style="width: 64px; height: 64px; background: #122028; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden;">
+                        <span id="spotify-art-icon" style="font-size: 24px;">🎵</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <span style="font: 8px Orbitron; color: var(--muted); letter-spacing: 1px;" id="spotify-status-text">STATUS: OAUTH REQUIRED</span>
+                        <h3 id="spotify-track" style="font-size: 18px; margin: 4px 0;">Not Connected</h3>
+                        <p id="spotify-artist" style="color: var(--muted); font-size: 13px; margin: 0;">Authenticate with your Spotify Developer App to stream live data.</p>
+                    </div>
+                    <div>
+                        <button id="spotify-auth-btn" class="primary" style="font: 8px Orbitron;" onclick="loginSpotify()">CONNECT SPOTIFY</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- 1. DYNAMIC CLOCKS ---
+        function updateClocks() {
+            const now = new Date();
+            document.getElementById('time-sgt').innerText = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Singapore' });
+            document.getElementById('live-sgt').innerText = 'SGT: ' + now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Singapore' });
+            document.getElementById('time-utc').innerText = now.toLocaleTimeString('en-GB', { timeZone: 'UTC' });
+            document.getElementById('time-wyoming').innerText = now.toLocaleTimeString('en-GB', { timeZone: 'America/Denver' });
+        }
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
+        // --- 2. GEOLOCATION API ---
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(2);
+                    const lon = position.coords.longitude.toFixed(2);
+                    document.getElementById('geo-location').innerText = `${lat}°, ${lon}°`;
+                },
+                () => {
+                    document.getElementById('geo-location').innerText = 'PERMISSION DENIED';
+                }
+            );
+        } else {
+            document.getElementById('geo-location').innerText = 'UNSUPPORTED';
+        }
+
+        // --- 3. "LOCKING IN" TIMER LOGIC ---
+        let timerInterval = null;
+        let totalSeconds = 0;
+        let isRunning = false;
+
+        function formatTime(sec) {
+            const hrs = String(Math.floor(sec / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+            const secs = String(sec % 60).padStart(2, '0');
+            return `${hrs}:${mins}:${secs}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('lock-in-btn');
+            if (!isRunning) {
+                isRunning = true;
+                btn.innerText = "PAUSE";
+                btn.style.borderColor = "var(--green)";
+                btn.style.color = "var(--green)";
+                timerInterval = setInterval(() => {
+                    totalSeconds++;
+                    document.getElementById('timer-display').innerText = formatTime(totalSeconds);
+                }, 1000);
+            } else {
+                isRunning = false;
+                btn.innerText = "LOCKING IN";
+                btn.style.borderColor = "var(--cyan)";
+                btn.style.color = "var(--cyan)";
+                clearInterval(timerInterval);
+            }
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            totalSeconds = 0;
+            document.getElementById('timer-display').innerText = "00:00:00";
+            const btn = document.getElementById('lock-in-btn');
+            btn.innerText = "LOCKING IN";
+            btn.style.borderColor = "var(--cyan)";
+            btn.style.color = "var(--cyan)";
+        }
+
+        // --- 4. SPOTIFY OAUTH & API INTEGRATION ---
+        const SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'; 
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
+        const SCOPES = 'user-read-currently-playing user-read-playback-state';
+
+        const hash = window.location.hash.substring(1);
+        const tokenVal = new URLSearchParams(hash).get('access_token');
+
+        if (tokenVal) {
+            window.location.hash = ''; // clear token from URL view
+            document.getElementById('spotify-auth-status').innerText = 'API_CONNECTED';
+            document.getElementById('spotify-auth-btn').style.display = 'none';
+            pollSpotifyPlayer(tokenVal);
+            setInterval(() => pollSpotifyPlayer(tokenVal), 4000);
+        }
+
+        function loginSpotify() {
+            const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}&show_dialog=true`;
+            window.location.href = authUrl;
+        }
+
+        async function pollSpotifyPlayer(token) {
+            try {
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                
+                if (response.status === 204 || response.status > 400) {
+                    document.getElementById('spotify-track').innerText = "No Audio Active";
+                    document.getElementById('spotify-artist').innerText = "Start playing something on Spotify";
+                    return;
+                }
+
+                const data = await response.json();
+                if (data && data.item) {
+                    document.getElementById('spotify-status-text').innerText = "CURRENTLY PLAYING";
+                    document.getElementById('spotify-track').innerText = data.item.name;
+                    document.getElementById('spotify-artist').innerText = data.item.artists.map(a => a.name).join(', ');
+                    
+                    if (data.item.album && data.item.album.images.length > 0) {
+                        const imageUrl = data.item.album.images[0].url;
+                        document.getElementById('spotify-art-container').innerHTML = `<img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching Spotify track:', err);
+            }
+        }
+    </script>
+</body>
+</html>
